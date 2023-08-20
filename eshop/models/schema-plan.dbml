@@ -1,0 +1,68 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+Table users {
+  _id ObjectId [primary key]
+  username varchar
+  email varchar
+  password varchar
+  role varchar [ref: > roles._id]
+}
+
+Table roles {
+  _id ObjectId [primary key]
+  roleName varchar
+  permission varchar
+  description varchar
+}
+
+Table products {
+  _id ObjectId [primary key]
+  name varchar
+  price double
+  description text
+  image varchar
+  category varchar
+  stock int
+  shop ObjectId [ref: > users._id]
+  createdAt timestamp
+  isFeatured boolean
+  isOnSale boolean
+}
+
+Table orders {
+  _id ObjectId [primary key]
+  userId ObjectId [ref: > users._id]
+  products jsonb
+  totalAmount double
+  orderDate timestamp
+}
+
+Table transactions {
+  _id ObjectId [primary key]
+  orderId ObjectId [ref: > orders._id]
+  userId ObjectId [ref: > users._id]
+  amount double
+  transactionDate timestamp
+  status varchar
+}
+
+Table reviews {
+  _id ObjectId [primary key]
+  userId ObjectId [ref: > users._id]
+  productId ObjectId [ref: > products._id]
+  rating int
+  comment text
+  createdAt timestamp
+}
+
+
+Ref: "roles"."_id" < "roles"."permission"
+
+<!-- 
+application-state
+- carts
+  - _id
+  - userId
+  - productId
+  - quantity
+  - createdAt -->
