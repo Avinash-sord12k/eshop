@@ -3,13 +3,13 @@ import { NextResponse } from 'next/server';
 import Products from '@/models/Products';
 import Users from '@/models/Users';
 import Roles from '@/models/Roles';
+import { getUserfromJwt, isPermitted } from '@/utils/auth/auth';
 
 
 export const GET = async (request, response) => {
   try {
     await connect();
-    // console.log("request.url: ", request.url);
-    // console.log("response: ", response);
+
     const productId = response.params.productId;
     if (!productId) {
       return NextResponse.json({
@@ -43,32 +43,26 @@ export const GET = async (request, response) => {
 export const DELETE = async (request, response) => {
   try {
     await connect();
-    const productId = response.params.productId;
 
+    const { email } = await getUserfromJwt(request.cookies.get('token').value);
+    const user = await Users.findOne({ email });
+    const role = await Roles.findOne({ name: user.role });
+    const reqPermission = [{ resource: 'products', actions: ['delete'] }];
+    const authorized = isPermitted(reqPermission, role.permissions);
+    if (!authorized) {
+      return NextResponse.json({
+        status: 400,
+        body: { message: 'Not permitted', success: false }
+      });
+    }
+
+    const productId = response.params.productId;
     const deletedProduct = await Products.findOneAndDelete({ _id: productId });
 
     if (!deletedProduct) {
       return NextResponse.json({
         status: 404,
         body: { message: 'Product not found', success: false }
-      });
-    }
-
-    const shopper = await Users.findOne({ _id: deletedProduct.shopperId });
-    if (!shopper) {
-      return NextResponse.json({
-        status: 400,
-        body: { message: 'Shopper not found', success: false }
-      });
-    }
-
-    const role = await Roles.findOne({ _id: shopper.role });
-    const isPermitted = role.permissions.some(permission =>
-      permission.resource === 'products' && permission.actions.includes('delete'));
-    if (!isPermitted) {
-      return NextResponse.json({
-        status: 400,
-        body: { message: 'Not permitted', success: false }
       });
     }
 

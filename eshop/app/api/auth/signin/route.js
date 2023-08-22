@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import Users from "@/models/Users";
 import Roles from "@/models/Roles";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 
 connect();
 export const POST = async (req) => {
@@ -39,11 +39,18 @@ export const POST = async (req) => {
       });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d"
-    })
-    const role = await Roles.findById(user.role);
-    const {name, permissions} = role;
+    const role = await Roles.findOne({ name: user.role });
+    const { name, permissions } = role;
+
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    console.log(secret);
+    const token = await new SignJWT({ email, role: { name, permissions } })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("2h")
+      .setIssuer("eshop")
+      .setAudience("eshop-users")
+      .sign(secret);
 
 
     let response = NextResponse.json({
@@ -52,7 +59,7 @@ export const POST = async (req) => {
         message: "Login successful",
         success: true,
         token,
-        user: { ...user._doc, password: undefined, role: {name, permissions}},
+        user: { ...user._doc, password: undefined, role: { name, permissions } },
       },
     });
     response.cookies.set("token", token, {

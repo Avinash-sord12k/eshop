@@ -16,8 +16,11 @@ export function permit(neededPermission, userPermission) {
   // user permissions array of object:
   // [{resource: "product", actions: ["create", "update"]}]
   // return true
-  console.log("neededPermission", neededPermission);
-  console.log("userPermission", userPermission);
+  // console.log("neededPermission", neededPermission);
+  // console.log("userPermission", userPermission);
+  console.log("client need: ")
+  // userPermission.forEach(user => console.log(user.resource, user.actions));
+  // neededPermission.forEach(need => console.log(need.resource, need.actions));
   if (Object.keys(userPermission).length === 0) {console.log(false); return false};
   if (Object.keys(neededPermission).length === 0) {console.log(true); return true};
   neededPermission.forEach(needed => {

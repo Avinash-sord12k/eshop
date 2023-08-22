@@ -13,6 +13,7 @@ import {
   Button,
   Tooltip,
   Avatar,
+  Badge,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
@@ -25,8 +26,8 @@ import {
   setError,
 } from '@/store/authSlice/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { permit } from '@/utils/permit/permit';
-
+import { useRouter } from 'next/navigation';
+import { stringToColor } from '@/utils/extras/extras';
 
 const pages = [
   {
@@ -42,7 +43,6 @@ const pages = [
     rolesPermitted: ['admin'],
   }
 ];
-
 const userSpecificPages = [
   {
     title: 'Wishlist',
@@ -76,37 +76,35 @@ const userSpecificPages = [
   },
 ];
 
-const settings = [
-  {
-    title: 'Profile',
-    description: 'Manage and personalize your profile information.',
-    href: '/profile',
-    permissions: [],
-  },
-  {
-    title: 'Account',
-    description: 'View and update your account settings.',
-    href: '/account',
-    permissions: [],
-  },
-  {
-    title: 'Dashboard',
-    description: 'Access your administrative dashboard.',
-    href: '/dashboard',
-    permissions: [],
-  },
-  {
-    title: 'Logout',
-    description: 'Logout from your account.',
-    href: '/logout',
-    permissions: [],
-  },
-];
 
 function TopNav() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { isAuth, username, role, permissions, email, userId, error } = useSelector(state => state.auth);
+  const { isAuth, username, role, image, permissions, email, userId, error } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const settings = [
+    {
+      title: 'Profile',
+      description: 'Manage and personalize your profile information.',
+      clickFunc: () => { router.push(`/profile`) },
+      permissions: [],
+    },
+    {
+      title: 'Dashboard',
+      description: 'Access your administrative dashboard.',
+      clickFunc: () => { router.push('/dashboard') },
+      permissions: [],
+    },
+    {
+      title: 'Logout',
+      description: 'Logout from your account.',
+      // clickFunc: () => {  },
+      clickFunc: () => { handleCloseUserMenu(); handleLogOut() },
+      permissions: [],
+    },
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -122,6 +120,51 @@ function TopNav() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleLogOut = async () => {
+    const response = await fetch('/api/auth/signout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+    const data = await response.json();
+    if (data.body.success) {
+      dispatch(setIsAuth(false));
+      dispatch(setUsername(''));
+      dispatch(setRole(''));
+      dispatch(setPermissions([]));
+      dispatch(setEmail(''));
+      dispatch(setError(''));
+      router.push('/');
+    }
+  };
+
+
+  const handlePermit = (neededPermission, userPermission) => {
+    if (Object.keys(userPermission).length === 0) {
+      return false;
+    }
+    if (Object.keys(neededPermission).length === 0) {
+      return true;
+    }
+    return neededPermission.every(needed => {
+      const user = userPermission.find(user => user.resource === needed.resource);
+      if (!user || !needed.actions.every(action => user.actions.includes(action))) return false;
+      return true;
+    });
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(' ')[0][0].toUpperCase()}`,
+    };
+  }
+
 
   return (
     <AppBar position="relative">
@@ -181,7 +224,7 @@ function TopNav() {
                 </MenuItem>
               ))}
               {userSpecificPages.map((page) => (
-                permit(page.permissions, permissions)
+                handlePermit(page.permissions, permissions)
                   ? (<MenuItem key={page.title} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page.title}</Typography>
                   </MenuItem>)
@@ -206,7 +249,7 @@ function TopNav() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            eSHOP
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -219,24 +262,32 @@ function TopNav() {
               </Button>
             ))}
             {userSpecificPages.map((page) => (
-                (permit(page.permissions, permissions)) && console.log("page", page)
-              ))}
-            {/* {userSpecificPages.map((page) => (
-                permit(page.permissions, permissions)
-                  ? (<MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page.title}</Typography>
-                  </MenuItem>)
-                  : null
-              ))} */}
+              handlePermit(page.permissions, permissions)
+                ? (<MenuItem key={page.title} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.title}</Typography>
+                </MenuItem>)
+                : null
+            ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             {(isAuth
               ? <>
+              {console.log("auth status: ", isAuth, username)}
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="https://mui.com/static/images/avatar/2.jpg" />
-                  </IconButton>
+                  <Badge color={'secondary'}
+                    badgeContent={stringAvatar(role).children}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}>
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      {
+                        image ? <Avatar alt="user image" src={image} />
+                          : <Avatar {...stringAvatar(username)} />
+                      }
+                    </IconButton>
+                  </Badge>
                 </Tooltip>
                 <Menu
                   sx={{ mt: '45px' }}
@@ -255,7 +306,7 @@ function TopNav() {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting.title} onClick={handleCloseUserMenu}>
+                    <MenuItem key={setting.title} onClick={() => {setting.clickFunc()}}>
                       <Typography textAlign="center">{setting.title}</Typography>
                     </MenuItem>
                   ))}

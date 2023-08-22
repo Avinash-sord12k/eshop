@@ -14,11 +14,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <ThemeRegistry>
-        <ReduxProvider>
+      <ReduxProvider>
+        <ThemeRegistry>
           <body className={inter.className}>{children}</body>
-        </ReduxProvider>
-      </ThemeRegistry>
+        </ThemeRegistry>
+      </ReduxProvider>
     </html>
   )
 }

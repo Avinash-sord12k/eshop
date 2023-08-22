@@ -5,10 +5,10 @@ import Roles from "@/models/Roles";
 import bcrypt from "bcrypt";
 
 
-connect();
 
 export const POST = async (request) => {
   try {
+    await connect();
     const { username, email, password, role } = await request.json();
 
     if (!username || !password || !email)
@@ -40,7 +40,7 @@ export const POST = async (request) => {
       username,
       email,
       password: hash,
-      role: askedRole._id
+      role: askedRole.name
     });
 
     const savedUser = await newUser.save();
@@ -56,6 +56,7 @@ export const POST = async (request) => {
     });
 
   } catch (error) {
+    console.log("internal server error: ", error.message);
     return NextResponse.json({
       status: 500,
       body: {

@@ -20,9 +20,9 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   role: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Roles",
-    default: () => mongoose.Types.ObjectId('64de22a0d9ec62d9e5f89323'),
+    type: String,
+    enum: ["user", "admin", "shopper"],
+    default: "user",
   },
   resetOtp: Number,
   resetOtpExpiry: Date,

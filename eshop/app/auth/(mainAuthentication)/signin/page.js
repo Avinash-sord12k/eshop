@@ -1,18 +1,23 @@
 "use client";
 import { useTheme } from '@emotion/react';
-import { Box, Button, Container, TextField, Typography, Alert } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Alert, IconButton, CircularProgress } from '@mui/material';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword } from '@/store/signinSlice/signinSlice';
 import { setIsAuth, setUsername, setRole, setPermissions, setEmail as setAuthEmail, setError } from '@/store/authSlice/authSlice'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import CachedIcon from '@mui/icons-material/Cached';
 
 const Signin = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const router = useRouter();
   const { email, password } = useSelector(state => state.signin); // Update the selector name
-  const { isAuth, username, role, permissions, error } = useSelector(state => state.auth);
+  const { isAuth, username, permissions, error } = useSelector(state => state.auth);
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [alert, setAlert] = React.useState({
     severity: 'warning',
     open: false,
@@ -21,6 +26,7 @@ const Signin = () => {
 
   const handleSignIn = async (e) => {
     console.log("Sign In");
+    setLoading(true);
     try {
       const response = await fetch('/api/auth/signin', {
         method: 'POST',
@@ -33,11 +39,9 @@ const Signin = () => {
         }
       });
       const data = await response.json();
-      // console.table(data);
-      // console.log(data.body.user);
-      // console.table(data.body.user.role);
 
       if (data.body.success) {
+        setLoading(false);
         const { username, role } = data.body.user;
         const { name, permissions } = role;
         console.log({ username, name, permissions });
@@ -48,11 +52,7 @@ const Signin = () => {
         dispatch(setAuthEmail(email));
         dispatch(setError(''));
         e.target.blur();
-        setAlert({
-          severity: 'success',
-          open: true,
-          message: data.body.message,
-        });
+        router.push('/');
       }
 
       else if (!data.body.success) {
@@ -66,7 +66,6 @@ const Signin = () => {
       }
       setTimeout(() => {
         setAlert(oldAlert => { console.log({ open: false, ...oldAlert }); return { ...oldAlert, open: false } });
-        if (isAuth) router.push('/');
       }, 3000);
 
       console.table({ isAuth, username, name, permissions, error });
@@ -102,10 +101,22 @@ const Signin = () => {
           <TextField id="email" label="Email" variant="outlined" fullWidth onChange={(e) => dispatch(setEmail(e.target.value))} value={email} />
         </Box>
         <Box sx={{ my: 2 }}>
-          <TextField id="password" label="Password" type="password" variant="outlined" fullWidth onChange={(e) => dispatch(setPassword(e.target.value))} value={password} />
+          <TextField id="password" label="Password" type={showPassword ? "text" : "password"} variant="outlined" fullWidth onChange={(e) => dispatch(setPassword(e.target.value))} value={password} InputProps={{
+            endAdornment: (
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </IconButton>
+            ),
+          }} />
+
         </Box>
         <Box sx={{ my: 2 }}>
-          <Button variant="contained" color="primary" fullWidth onClick={handleSignIn}>
+          <Button variant="contained" color="primary" fullWidth onClick={handleSignIn} 
+          startIcon={ loading && <CircularProgress color="secondary" />}>
             Sign In
           </Button>
         </Box>
