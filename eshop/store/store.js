@@ -6,22 +6,24 @@ import persistStore from "redux-persist/es/persistStore";
 import authReducer from './authSlice/authSlice'
 import signinReducer from './signinSlice/signinSlice'
 import signupReducer from './signupSlice/signupSlice'
+import uiReducer from './uiStateSlice/uiStateSlice'
 
 const persistConfig = {
-  key: 'root',
-  storage: storage,
+  key: 'auth',
+  storage
 }
 
 const rootReducer = combineReducers({
-  auth: authReducer,
+  auth: persistReducer(persistConfig, authReducer),
   signin: signinReducer,
   signup: signupReducer,
+  ui: uiReducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: {
       ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

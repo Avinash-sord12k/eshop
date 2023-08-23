@@ -34,6 +34,9 @@ changed the role object in roles and permissions table.
 cart crud in backend + ui - 21 aug
 
 converting only client components to server + client components - 22 aug
+problems faced: state update was getting delayed, so the ui was not updating properly.
+solution: used exact value changed in search function to get the latest value for the search query.
+
 
 to do:
 complete UI + integration from backend  ( goal )

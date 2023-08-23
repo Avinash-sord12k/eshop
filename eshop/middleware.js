@@ -3,23 +3,25 @@ import { jwtVerify } from 'jose';
 
 export default async function middleware(request) {
   try {
+    console.log("___middleware invoked")
     const token = request.cookies.get("token")?.value;
     const { pathname } = request.nextUrl;
 
-    console.log("- jwt token: ", token);
+    console.log("- jwt token: ", Boolean(token));
     console.log("- url: ", pathname);
 
     if (token) {
-      console.log("- token got: ");
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
       const decoded = await jwtVerify(token, secret, {
         issuer: "eshop",
         audience: "eshop-users"
       });
-      // request.body.user = decoded.payload;
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("User", JSON.stringify(decoded.payload));
 
-      console.log("- decoded: ", decoded);
-      return NextResponse.next();
+      return NextResponse.next({
+        headers: requestHeaders,
+      })
     }
     else {
       return NextResponse.redirect(process.env.CURRENT_DOMAIN + "/auth/signin");

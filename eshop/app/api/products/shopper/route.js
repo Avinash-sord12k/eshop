@@ -5,7 +5,7 @@ import Users from '@/models/Users';
 import Roles from '@/models/Roles';
 import { getUserfromJwt, isPermitted } from '@/utils/auth/auth';
 
-export const GET = async (request) => {
+export const POST = async (request) => {
   try {
     const { email } = await getUserfromJwt(request.cookies.get('token').value);
     const shopper = await Users.findOne({ email });

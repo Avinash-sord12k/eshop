@@ -8,26 +8,26 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Box, Paper } from '@mui/material';
 
-const slideData = [
-  {
-    img: '/illustrations/Ecommerce web page-amico.svg',
-    title: 'Ecommerce web page',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  },
-  {
-    img: '/illustrations/Data analysis-bro.svg',
-    title: 'Online shopping',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  },
-  {
-    img: '/illustrations/Data analysis-pana.svg',
-    title: 'Data analysis',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  }
-]
 
 
-export default () => {
+export default function HeroSwiper() {
+  const slideData = [
+    {
+      img: '/illustrations/Ecommerce web page-amico.svg',
+      title: 'Ecommerce web page',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+    {
+      img: '/illustrations/Data analysis-bro.svg',
+      title: 'Online shopping',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    },
+    {
+      img: '/illustrations/Data analysis-pana.svg',
+      title: 'Data analysis',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    }
+  ];
   return (
     <Swiper
       modules={[Navigation, Pagination]}
@@ -35,14 +35,12 @@ export default () => {
       slidesPerView={1}
       navigation={true}
       pagination={{ clickable: true }}
-      // onSlideChange={() => console.log('slide change')}
-      // onSwiper={(swiper) => console.log(swiper)}
       style={{ height: '300px', backgroundColor: '#fff' }}
       autoplay={{ delay: 5000 }}
     >
       {slideData.map((slide, index) => (
         <SwiperSlide key={index}>
-          <Box sx={{
+          <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -60,14 +58,14 @@ export default () => {
               height: '100%',
               maxWidth: { xs: 'none', sm: '20%', md: '40%' },
             }} />
-            <Paper sx={{
+            <div sx={{
               boxShadow: 'none',
               display: { xs: 'none', sm: 'block' }
             }}>
               <h1>{slide.title}</h1>
               <p>{slide.description}</p>
-            </Paper>
-          </Box>
+            </div>
+          </div>
         </SwiperSlide>
       ))}
     </Swiper >

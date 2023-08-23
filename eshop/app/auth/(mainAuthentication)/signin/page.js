@@ -3,12 +3,12 @@ import { useTheme } from '@emotion/react';
 import { Box, Button, Container, TextField, Typography, Alert, IconButton, CircularProgress } from '@mui/material';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword } from '@/store/signinSlice/signinSlice';
 import { setIsAuth, setUsername, setRole, setPermissions, setEmail as setAuthEmail, setError } from '@/store/authSlice/authSlice'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import CachedIcon from '@mui/icons-material/Cached';
 
 const Signin = () => {
   const theme = useTheme();
@@ -68,8 +68,7 @@ const Signin = () => {
         setAlert(oldAlert => { console.log({ open: false, ...oldAlert }); return { ...oldAlert, open: false } });
       }, 3000);
 
-      console.table({ isAuth, username, name, permissions, error });
-
+      console.table({ isAuth, username, permissions, error });
     } catch (error) {
       console.log(error);
     }
@@ -115,8 +114,8 @@ const Signin = () => {
 
         </Box>
         <Box sx={{ my: 2 }}>
-          <Button variant="contained" color="primary" fullWidth onClick={handleSignIn} 
-          startIcon={ loading && <CircularProgress color="secondary" />}>
+          <Button variant="contained" color="primary" fullWidth onClick={handleSignIn}
+            startIcon={loading && <CircularProgress color="secondary" />}>
             Sign In
           </Button>
         </Box>

@@ -11,20 +11,21 @@ import ProductManagementBar from '@/components/specific/shop/ProductManagementBa
 const ManageProducts = () => {
 
   const [products, setProducts] = React.useState([]);
+  const [productsToShow, setProductsToShow] = React.useState([]);
   const [openModal, setOpenModal] = React.useState(null);
   const handleClose = () => { setOpenModal(null); setEditedProduct({}) };
   const handleOpen = (index) => { setOpenModal(index); setEditedProduct(products[index]) };
   const [updateAlert, setUpdateAlert] = React.useState('');
   const [updateLoading, setUpdateLoading] = React.useState(false);
   const [editedProduct, setEditedProduct] = React.useState({});
-
+  const [filterOption, setFilterOption] = React.useState('all');
+  const [searchQuery, setSearchQuery] = React.useState('');
   const [addProductModal, setAddProductModal] = React.useState(null);
   const handleAddProductModalClose = () => setAddProductModal(null);
   const handleAddProductModalOpen = () => setAddProductModal(true);
   const [newProduct, setNewProduct] = React.useState({
     name: '', price: '', stock: '', image: '', description: '', isFeatured: false, isOnSale: false, category: ''
   });
-
   const handlUpdateProductInputChange = (e) => {
     const { name, value } = e.target;
     setEditedProduct({ ...editedProduct, [name]: value });
@@ -35,7 +36,7 @@ const ManageProducts = () => {
   }
   const getProducts = async () => {
     const res = await fetch('/api/products/shopper', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'withCredentials': true
@@ -44,6 +45,7 @@ const ManageProducts = () => {
     const data = await res.json();
     console.log(data);
     setProducts(data.body.products);
+    setProductsToShow(data.body.products);
   }
   const handleSaveUpdateToServer = async () => {
     setUpdateLoading(true);
@@ -53,13 +55,14 @@ const ManageProducts = () => {
         'Content-Type': 'application/json',
         'withCredentials': true
       },
-      body: JSON.stringify({ ...editedProduct, productId: editedProduct._id })
+      body: JSON.stringify({ updateData: editedProduct, productId: editedProduct._id })
     });
     const data = await res.json();
     console.log(data);
     if (data.body.success) {
       handleClose();
       setUpdateLoading(false);
+      getProducts();
     }
     setUpdateAlert(data.body.message);
   }
@@ -82,19 +85,56 @@ const ManageProducts = () => {
     setUpdateAlert(data.body.message);
     getProducts();
   }
-
+  const handleSearch = (searchQuery, filterOption) => {
+    console.log("searched: ", searchQuery, filterOption);
+    switch (filterOption) {
+      case 'all':
+        return setProductsToShow(products);
+      case 'name':
+        const filteredProductsByName = products.filter(product => product.name.toLowerCase().includes(searchQuery.toLowerCase()));
+        return setProductsToShow(filteredProductsByName);
+      case 'price less than':
+        const filteredProductsByPrice = products.filter(product => (!isNaN(parseInt(searchQuery)) && (product.price <= searchQuery)));
+        return setProductsToShow(filteredProductsByPrice);
+      case 'price greater than':
+        const filteredProductsByPrice2 = products.filter(product => (!isNaN(parseInt(searchQuery)) && (product.price >= searchQuery)));
+        return setProductsToShow(filteredProductsByPrice2);
+      case 'category':
+        const filteredProducts = products.filter(product => product.category.includes(searchQuery));
+        return setProductsToShow(filteredProducts);
+      default:
+        return setProductsToShow(products);
+    }
+  }
+  const handleSearchWithCategory = (e) => {
+    const { value: query } = e.target;
+    setSearchQuery(query);
+    handleSearch(query, filterOption);
+    console.log(products, productsToShow, query);
+  }
+  const handleSelectFilterOption = (e) => {
+    const { value: option } = e.target;
+    setFilterOption(option);
+    console.log(option, filterOption);
+    handleSearch(searchQuery, option);
+  }
   React.useEffect(() => {
     getProducts();
   }, []);
 
+
   return (
     <Box mt={5}>
-      <Typography variant="h4" fontWeight={'bold'}> Manage Products</Typography>
       <Box>
-        <ProductManagementBar openAddProductModlNav={handleAddProductModalOpen} />
+        <ProductManagementBar data={{
+          handleSelectFilterOption,
+          handleAddProductModalOpen,
+          handleSearchWithCategory,
+          filterOption,
+        }} />
       </Box>
       <Box sx={{ mt: '40px', mr: '40px' }} >
-        <ProductsView products={products} openModal={handleOpen} />
+        <ProductsView products={productsToShow} getProducts={getProducts} openModal={handleOpen} />
       </Box>
       <Modal
 
@@ -167,14 +207,14 @@ const ManageProducts = () => {
               fullWidth
               margin="normal"
             />
-            <Button variant={newProduct.isFeatured ? 'contained' : 'text'} sx={{mr:2}}
-              startIcon={newProduct.isFeatured && <CheckIcon/>}
+            <Button variant={newProduct.isFeatured ? 'contained' : 'text'} sx={{ mr: 2 }}
+              startIcon={newProduct.isFeatured && <CheckIcon />}
               onClick={() => setNewProduct({ ...newProduct, isFeatured: !newProduct.isFeatured })}>
               Featured
             </Button>
-            <Button variant={newProduct.isOnSale ? 'contained' : 'text'} sx={{mr:2}}
-              startIcon={newProduct.isOnSale && <CheckIcon/>}
-            onClick={() => setNewProduct({...newProduct, isOnSale: !newProduct.isOnSale})}>
+            <Button variant={newProduct.isOnSale ? 'contained' : 'text'} sx={{ mr: 2 }}
+              startIcon={newProduct.isOnSale && <CheckIcon />}
+              onClick={() => setNewProduct({ ...newProduct, isOnSale: !newProduct.isOnSale })}>
               On Sale
             </Button>
             <TextField

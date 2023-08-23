@@ -6,16 +6,16 @@ import useTheme from '@mui/material/styles/useTheme';
 import { useSelector } from 'react-redux';
 import { stringToColor } from '@/utils/extras/extras';
 
-function stringAvatar(name) {
-  return {
-    sx: {
-      bgcolor: stringToColor(name),
-    },
-    children: `${name.split(' ')[0][0].toUpperCase()}`,
-  };
-}
 
 const ProfilePage = () => {
+  const stringAvatar = (name) => {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.trim()[0].toUpperCase()}`,
+    };
+  }
   const theme = useTheme();
   const { image, username, role, permissions, email } = useSelector(state => state.auth);
 
@@ -47,10 +47,10 @@ const ProfilePage = () => {
                 },
               }}
             >
-              {image ? (
+              {(image) ? (
                 <Avatar alt="user image" src={image} sx={{ width: '100px', height: '100px' }} />
               ) : (
-                <Avatar {...stringAvatar(username)} sx={{ width: '100px', height: '100px' }} />
+                <Avatar {...stringAvatar(username || "A")} sx={{ width: '100px', height: '100px' }} />
               )}
             </Badge>
             <Typography variant="h6" sx={{ marginTop: 2 }}>
@@ -71,18 +71,19 @@ const ProfilePage = () => {
             <Grid container>
               {permissions.map((permission, index) => (
                 <React.Fragment key={index}>
-                  <Grid item xs={3} sx={{p:2}}>
+                  <Grid item xs={3} sx={{ p: 2 }}>
                     <Typography variant="body1">{permission.resource}</Typography>
                   </Grid>
                   <Grid item xs={9}>
                     {permission.actions.map((action, index2) => (
-                      <Typography variant={'span'} key={index2} sx={{ 
+                      <Typography variant={'span'} key={index2} sx={{
                         mr: 3,
                         backgroundColor: stringToColor(action),
                         px: '8px', py: '4px', borderRadius: 3, color: 'white',
                         border: '2px solid #11111150',
                         boxSizing: 'border-box',
-                        textTransform: 'capitalize' }}>
+                        textTransform: 'capitalize'
+                      }}>
                         {action}
                       </Typography>
                     ))}
