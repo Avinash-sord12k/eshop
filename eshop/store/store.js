@@ -7,6 +7,8 @@ import authReducer from './authSlice/authSlice'
 import signinReducer from './signinSlice/signinSlice'
 import signupReducer from './signupSlice/signupSlice'
 import uiReducer from './uiStateSlice/uiStateSlice'
+import cartReducer from './cartSlice/cartSlice'
+import wishlistReducer from './wishlistSlice/wishlistSlice'
 
 const persistConfig = {
   key: 'auth',
@@ -18,6 +20,8 @@ const rootReducer = combineReducers({
   signin: signinReducer,
   signup: signupReducer,
   ui: uiReducer,
+  cart: persistReducer(persistConfig, cartReducer),
+  wishlist: persistReducer(persistConfig, wishlistReducer),
 });
 
 // const persistedReducer = persistReducer(persistConfig, rootReducer);

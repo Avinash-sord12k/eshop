@@ -8,87 +8,92 @@ const categories = [
   {
     title: 'Electronics',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/electronics',
+    href: '/products/category/electronics',
+  },
+  {
+    title: 'Headphones',
+    description: 'Explore our wide range of high-quality products.',
+    href: '/products/category/headphones',
   },
   {
     title: 'Clothing',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/clothing',
+    href: '/products/category/clothing',
   },
   {
     title: 'Furniture',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/furniture',
+    href: '/products/category/furniture',
   },
   {
     title: 'Books',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/books',
+    href: '/products/category/books',
   },
   {
     title: 'Sports',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/sports',
+    href: '/products/category/sports',
   },
   {
     title: 'Toys',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/toys',
+    href: '/products/category/toys',
   },
   {
     title: 'Food',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/food',
+    href: '/products/category/food',
   },
   {
     title: 'Health',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/health',
+    href: '/products/category/health',
   },
   {
     title: 'Beauty',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/beauty',
+    href: '/products/category/beauty',
   },
   {
     title: 'Jewelry',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/jewelry',
+    href: '/products/category/jewelry',
   },
   {
     title: 'Automotive',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/automotive',
+    href: '/products/category/automotive',
   },
   {
     title: 'Garden',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/garden',
+    href: '/products/category/garden',
   },
   {
     title: 'Pet',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/pet',
+    href: '/products/category/pet',
   },
   {
     title: 'Baby',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/baby',
+    href: '/products/category/baby',
   },
   {
     title: 'Tools',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/tools',
+    href: '/products/category/tools',
   },
   {
     title: 'Office',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/office',
+    href: '/products/category/office',
   },
   {
     title: 'Movies',
     description: 'Explore our wide range of high-quality products.',
-    href: '/products/movies',
+    href: '/products/category/movies',
   },
 ];
 
@@ -100,7 +105,11 @@ const Categories = () => {
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: 'background.paper'
+        backgroundColor: 'background.paper',
+        overflowX: 'auto',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
       }}
     >
       {categories.map((category, index) => (

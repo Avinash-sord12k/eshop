@@ -1,12 +1,14 @@
 "use client";
 
 import ProductsView from '@/components/specific/shop/ProductsView';
-import { Box, Grid, Typography, Modal, TextField, Button, Fade, Checkbox } from '@mui/material'
+import { Box, Grid, Typography, Modal, TextField, Button, Fade, Checkbox, CircularProgress } from '@mui/material'
 import SaveIcon from '@mui/icons-material/Save';
 import LoopIcon from '@mui/icons-material/Loop';
 import CheckIcon from '@mui/icons-material/Check';
 import React from 'react'
 import ProductManagementBar from '@/components/specific/shop/ProductManagementBar';
+
+
 
 const ManageProducts = () => {
 
@@ -137,7 +139,6 @@ const ManageProducts = () => {
         <ProductsView products={productsToShow} getProducts={getProducts} openModal={handleOpen} />
       </Box>
       <Modal
-
         slotProps={{
           backdrop: {
             timeout: 500,
@@ -230,7 +231,11 @@ const ManageProducts = () => {
             />
             {/* Add more fields for other product details */}
             <Button variant="contained"
-              startIcon={updateLoading ? <LoopIcon /> : <SaveIcon />} color="primary" onClick={handleSaveNewToServer}>
+              startIcon={updateLoading
+                ? <CircularProgress color="inherit" />
+                : <SaveIcon />}
+              color="primary"
+              onClick={handleSaveNewToServer}>
               Save Changes
             </Button>
           </Box>
@@ -305,7 +310,9 @@ const ManageProducts = () => {
           />
           {/* Add more fields for other product details */}
           <Button variant="contained"
-            startIcon={updateLoading ? <LoopIcon /> : <SaveIcon />} color="primary" onClick={handleSaveUpdateToServer}>
+            startIcon={updateLoading ? <CircularProgress color="inherit" sx={{
+              transform: 'scale(0.5)',
+            }} /> : <SaveIcon />} color="primary" onClick={handleSaveUpdateToServer}>
             Save Changes
           </Button>
         </Box>

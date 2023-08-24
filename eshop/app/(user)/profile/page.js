@@ -21,9 +21,18 @@ const ProfilePage = () => {
 
   return (
     <Box sx={{ margin: '30px 30px 30px 0' }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{
+        minHeight: 'calc(100vh - 64px)'
+      }}>
         <Grid item xs={12} md={4}>
-          <Paper elevation={0} sx={{ padding: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Paper elevation={0} sx={{
+            padding: 6,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            height: '100%',
+            boxShadow: 1,
+          }}>
             <Badge
               badgeContent={<AddCircleIcon onClick={() => console.log('clicked')} />}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -62,17 +71,20 @@ const ProfilePage = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} md={8}>
-          <Paper elevation={0} sx={{ padding: 2 }}>
-            <Typography variant="h6">Role</Typography>
-            <Typography variant="body1">{role}</Typography>
-            <Typography variant="h6" sx={{ marginTop: 2 }} gutterBottom>
+          <Paper elevation={0} sx={{
+            padding: 6,
+            height: '100%',
+            boxShadow: 1,
+          }}>
+            <Typography variant="h6">Role - {role}</Typography>
+            <Typography variant="h6" sx={{ mt: 4, mb: 8 }} gutterBottom>
               Permissions
             </Typography>
-            <Grid container>
+            <Grid container spacing={5}>
               {permissions.map((permission, index) => (
                 <React.Fragment key={index}>
                   <Grid item xs={3} sx={{ p: 2 }}>
-                    <Typography variant="body1">{permission.resource}</Typography>
+                    <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>{permission.resource}</Typography>
                   </Grid>
                   <Grid item xs={9}>
                     {permission.actions.map((action, index2) => (

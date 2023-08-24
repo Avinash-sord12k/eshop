@@ -16,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import UserAvatar from './UserAvatar';
 import { useSelector } from 'react-redux';
+import CartDetails from './CartDetails';
 
 const pages = [
   {
@@ -200,8 +201,9 @@ function TopNav() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-              <UserAvatar />
+          <Box sx={{ flexGrow: 0, display: 'flex', gap: 4 }} suppressHydrationWarning={true}>
+            <CartDetails />
+            <UserAvatar />
           </Box>
         </Toolbar>
       </Container>

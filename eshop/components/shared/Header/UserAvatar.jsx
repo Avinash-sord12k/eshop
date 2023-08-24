@@ -78,7 +78,7 @@ const UserAvatar = () => {
   }, []);
 
   return (
-    <>
+    <div>
       {client && (isAuth
         ? <>
           <Tooltip title="Open settings">
@@ -128,19 +128,19 @@ const UserAvatar = () => {
           <Button
             href="/auth/signin"
             color="inherit"
-            sx={{ mr: 2, display: 'block' }}
+            sx={{ display: 'block' }}
           >
             Login
           </Button>
           <Button
             href="/auth/signup"
             color="inherit"
-            sx={{ mr: 2, display: 'block' }}
+            sx={{ display: 'block' }}
           >
             Register
           </Button>
         </Box>)}
-    </>
+    </div>
   )
 }
 

@@ -159,8 +159,9 @@ const UserPageLayout = ({ children }) => {
         </Box>
       </Box>
       <Box sx={{
-        marginLeft: '100px', // Adjust margin based on collapsed state
-        transition: 'margin-left 0.3s ease-in-out', // Add transition for smooth animation
+        marginLeft: '100px',
+        transition: 'margin-left 0.3s ease-in-out',
+        marginRight: '40px',
       }}>
         {children}
       </Box>
