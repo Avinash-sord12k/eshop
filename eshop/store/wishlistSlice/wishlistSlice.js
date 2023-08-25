@@ -9,11 +9,13 @@ const wishlistSlice = createSlice({
   initialState,
   reducers: {
     addToWishlist: (state, action) => {
-      const { id } = action.payload;
+      const { id, name, price, image, stock } = action.payload;
+      console.log("action.payload: ", action.payload);
       const alreadyInWishlist = state.wishlist.find(item => item.id === id);
 
       if (!alreadyInWishlist) {
-        state.wishlist.push(action.payload);
+        const newItem = { id, name, price, image, dateAdded: new Date(), inStock: stock > 0};
+        state.wishlist = [...state.wishlist, newItem];
       }
     },
     removeFromWishlist: (state, action) => {

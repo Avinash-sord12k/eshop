@@ -1,13 +1,23 @@
 import { NextResponse } from "next/server";
 import Orders from "@/models/Orders";
+import Users from "@/models/Users";
 import { connect } from '@/database/connect';
 
 export const POST = async (req) => {
   try {
     await connect();
     const { email, products, totalAmount } = await req.json();
+    if (!email || (!products || !products.length) || !totalAmount)
+      return NextResponse.json({
+        status: 400,
+        body: { message: 'email, products and totalAmount are required', success: false, }
+      });
+
+    const user = await Users.findOne({ email });
+    const userId = user.id;
+
     const order = new Orders({
-      email,
+      userId,
       products,
       totalAmount,
       status: 'pending',
@@ -15,7 +25,15 @@ export const POST = async (req) => {
 
     await order.save();
 
-    return NextResponse.redirect('/orders');
+    // return NextResponse.redirect('/orders');
+    // for now we will return a json response for testing
+    return NextResponse.json({
+      status: 200,
+      body: {
+        success: true,
+        message: "Order placed successfully."
+      }
+    });
 
   } catch (error) {
     console.log("error in create order", error);
@@ -29,9 +47,7 @@ export const POST = async (req) => {
   }
 }
 
-
 export const PUT = async (req) => {
-  // refer order schema: above Orders.js link
   try {
     const { id, update } = await req.json();
     if (!id) return NextResponse.json({
@@ -41,14 +57,16 @@ export const PUT = async (req) => {
         success: false,
       }
     });
-    if (!update) return NextResponse.json({
-      status: 400,
-      body: {
-        message: 'update is required',
-        success: false,
-      }
-    });
-    const order = await Orders.findOneAndUpdate({ id }, { update }, { new: true });
+    if (!(Object.keys(update).length)) {
+      return NextResponse.json({
+        status: 400,
+        body: {
+          message: 'update is required',
+          success: false,
+        }
+      });
+    }
+    const order = await Orders.findOneAndUpdate({ id }, { update }, { new: false });
     return NextResponse.json({
       status: 200,
       body: {
@@ -70,7 +88,6 @@ export const PUT = async (req) => {
 
 }
 
-
 export const DELETE = async (req) => {
   try {
     const { id } = await req.json();
@@ -91,7 +108,7 @@ export const DELETE = async (req) => {
       }
     });
   } catch (error) {
-    
+
   }
-    
-  }
+
+}

@@ -2,7 +2,6 @@
 import React from 'react';
 import { Card, CardContent, CardMedia, Typography, Button, Box, Grid, Paper, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -52,9 +51,7 @@ const CartListItem = ({ item }) => {
   );
 };
 const CheckOutCart = ({ cart }) => {
-  const handleCreateOrder = () => {
-
-  }
+  const handleCreateOrder = () => {}
   return (
     <Box sx={{ mt: 4 }}>
       <Button fullWidth variant='contained'>Place order</Button>

@@ -4,7 +4,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { stringToColor } from '@/utils/extras/extras';
 import { useRouter } from 'next/navigation';
-import { setIsAuth, setUsername, setRole, setPermissions, setEmail, setError } from '@/store/authSlice/authSlice';
+import { setIsAuth, setUsername, setRole, setPermissions, setEmail, setError, setLogout } from '@/store/authSlice/authSlice';
 
 
 const UserAvatar = () => {
@@ -23,6 +23,12 @@ const UserAvatar = () => {
       title: 'Dashboard',
       description: 'Access your administrative dashboard.',
       clickFunc: () => { router.push('/dashboard') },
+      permissions: [],
+    },
+    {
+      title: 'Wishlist',
+      description: 'Manage your wishlist.',
+      clickFunc: () => { router.push('/wishlist') },
       permissions: [],
     },
     {
@@ -45,12 +51,7 @@ const UserAvatar = () => {
     });
     const data = await response.json();
     if (data.body.success) {
-      dispatch(setIsAuth(false));
-      dispatch(setUsername(''));
-      dispatch(setRole(''));
-      dispatch(setPermissions([]));
-      dispatch(setEmail(''));
-      dispatch(setError(''));
+      dispatch(setLogout());
       router.push('/');
     }
   };

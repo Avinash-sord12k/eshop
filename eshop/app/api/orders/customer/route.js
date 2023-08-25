@@ -3,7 +3,7 @@ import Orders from "@/models/Orders";
 import Users from "@/models/Users";
 import { connect } from '@/database/connect';
 
-export const GET = async (req) => {
+export const POST = async (req) => {
   try {
     await connect();
     const { email } = await req.json();

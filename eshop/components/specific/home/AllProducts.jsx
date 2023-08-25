@@ -21,7 +21,7 @@ const AllProducts = async () => {
         my: 2,
       }}>
         {onSaleProducts.map(product => (
-          <Card key={product._id} product={product} />
+          <Card key={product._doc._id} product={product._doc} />
         ))}
       </Box>
 
@@ -33,7 +33,7 @@ const AllProducts = async () => {
         my: 2,
       }}>
         {featuredProducts.map(product => (
-          <Card key={product._id} product={product} />
+          <Card key={product._doc._id} product={product._doc} />
         ))}
       </Box>
 
@@ -45,7 +45,7 @@ const AllProducts = async () => {
         my: 2,
       }}>
         {basicProducts.map(product => (
-          <Card key={product._id} product={product} />
+          <Card key={product._doc._id} product={product._doc} />
         ))}
       </Box>
 

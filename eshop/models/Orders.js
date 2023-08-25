@@ -13,6 +13,11 @@ const OrderSchema = new mongoose.Schema({
         ref: 'Products',
         required: true,
       },
+      shopperId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users',
+        required: true,
+      },
       quantity: {
         type: Number,
         required: true,

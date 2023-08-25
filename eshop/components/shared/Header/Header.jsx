@@ -74,12 +74,9 @@ function TopNav() {
     setAnchorElNav(event.currentTarget);
   };
 
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-
 
   const handlePermit = (neededPermission, userPermission) => {
     if (Object.keys(userPermission).length === 0) {
