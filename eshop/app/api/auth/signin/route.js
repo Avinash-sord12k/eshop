@@ -5,9 +5,9 @@ import Roles from "@/models/Roles";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
 
-connect();
 export const POST = async (req) => {
   try {
+    await connect();
     const { email, password } = await req.json();
     if (!email || !password) {
       return NextResponse.json({
@@ -43,7 +43,7 @@ export const POST = async (req) => {
     const { name, permissions } = role;
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-    const token = await new SignJWT({ email, role: { name, permissions } })
+    const token = await new SignJWT({ username: user.username, email, role: { name, permissions } })
       .setProtectedHeader({ alg: "HS256" })
       .setIssuedAt()
       .setExpirationTime("2h")

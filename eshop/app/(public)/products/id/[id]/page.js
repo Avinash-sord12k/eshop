@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Button, IconButton, Rating } from '@mui/material';
+import { Box, Grid, Typography, Button, IconButton, Rating, Container } from '@mui/material';
 import React from 'react';
 import { connect } from '@/database/connect';
 import Products from '@/models/Products';
@@ -12,10 +12,10 @@ const ProductPage = async ({ params }) => {
   const product = await Products.findById(params.id);
 
   return (
-    <Box sx={{ mt: 4 }}>
+    <Container sx={{ mt: 4 }}>
       <Grid container spacing={6}>
-        <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <Box sx={{ boxShadow: 1 }}>
+        <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+          <Box elevation={2} >
             <img src={product.image} alt={product.name} width={300} height={300} />
           </Box>
         </Grid>
@@ -35,7 +35,7 @@ const ProductPage = async ({ params }) => {
           </Box>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 };
 

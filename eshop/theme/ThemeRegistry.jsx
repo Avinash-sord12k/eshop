@@ -1,23 +1,25 @@
 'use client';
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import NextAppDirEmotionCacheProvider from './EmotionCache';
 import { Roboto } from 'next/font/google';
 
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
+// const roboto = Roboto({
+//   weight: ['300', '400', '500', '700'],
+//   subsets: ['latin'],
+//   display: 'swap',
+// });
 
-const theme = createTheme({
+let theme = createTheme({
   palette: {
     primary: {
       main: '#673ab7', // Purple color for primary elements
+      contrastText: '#fff',
     },
     secondary: {
       main: '#ff4081', // Pink color for secondary elements
+      contrastText: '#fff',
     },
     text: {
       primary: '#333',
@@ -30,7 +32,7 @@ const theme = createTheme({
     mode: 'light',
   },
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: 'Poppins, Roboto, sans-serif',
     h1: {
       fontSize: '2.5rem',
       fontWeight: 700,
@@ -73,6 +75,7 @@ const theme = createTheme({
     // Customize other components as needed
   },
 });
+theme = responsiveFontSizes(theme);
 
 export default function ThemeRegistry({ children }) {
   return (

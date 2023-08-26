@@ -1,32 +1,29 @@
 "use client";
-import { useTheme } from '@emotion/react';
-import { Box, Button, Container, TextField, Typography, Alert, IconButton, CircularProgress } from '@mui/material';
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation';
+import { useTheme } from '@emotion/react';
+import { Box, Button, Container, TextField, Typography, IconButton, Link, Divider, Chip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEmail, setPassword } from '@/store/signinSlice/signinSlice';
-import { setIsAuth, setUsername, setRole, setPermissions, setEmail as setAuthEmail, setError } from '@/store/authSlice/authSlice'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import GoogleIcon from '@mui/icons-material/Google';
+import { setEmail, setPassword, setShowPassword } from '@/store/signinSlice/signinSlice';
+import { setAlert, setDisabledLoading } from '@/store/uiStateSlice/uiStateSlice';
+import { setLogin } from '@/store/authSlice/authSlice';
+import { useRouter } from 'next/navigation';
+import DisabledPageLoader from '@/components/common/Progress/DisabledPageLoader';
+import CustomAlert from '@/components/common/Alert';
+
 
 const Signin = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const router = useRouter();
-  const { email, password } = useSelector(state => state.signin); // Update the selector name
-  const { isAuth, username, permissions, error } = useSelector(state => state.auth);
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [alert, setAlert] = React.useState({
-    severity: 'warning',
-    open: false,
-    message: '',
-  });
+  const { email, password, showPassword } = useSelector(state => state.signin);
 
   const handleSignIn = async (e) => {
     console.log("Sign In");
-    setLoading(true);
+    dispatch(setDisabledLoading(true));
+    router.prefetch('/');
     try {
       const response = await fetch('/api/auth/signin', {
         method: 'POST',
@@ -39,88 +36,103 @@ const Signin = () => {
         }
       });
       const data = await response.json();
+      console.log(data);
 
       if (data.body.success) {
-        setLoading(false);
         const { username, role } = data.body.user;
-        const { name, permissions } = role;
-        console.log({ username, name, permissions });
-        dispatch(setIsAuth(true));
-        dispatch(setUsername(username));
-        dispatch(setRole(name));
-        dispatch(setPermissions(permissions));
-        dispatch(setAuthEmail(email));
-        dispatch(setError(''));
+        const { image, permissions, email, userId } = data.body.user;
+        dispatch(setLogin({ username, role: role.name, image, permissions, email, userId }));
         e.target.blur();
         router.push('/');
+        dispatch(setDisabledLoading(false));
       }
 
       else if (!data.body.success) {
-        console.log(data);
-        dispatch(setError(data.body.message));
-        setAlert({
-          severity: (data.status == 400 && 'warning') || (data.status == 500 && 'error'),
-          open: true,
-          message: data.body.message,
-        });
+        dispatch(setDisabledLoading(false));
+        dispatch(setAlert({ open: true, message: data.body.message, severity: 'error' }));
       }
-      setTimeout(() => {
-        setAlert(oldAlert => { console.log({ open: false, ...oldAlert }); return { ...oldAlert, open: false } });
-      }, 3000);
 
-      console.table({ isAuth, username, permissions, error });
     } catch (error) {
+      dispatch(setAlert({ open: true, message: error.message, severity: 'error' }));
       console.log(error);
     }
   }
 
   return (
-    <Container sx={{
-      border: `2px solid ${theme.palette.primary.dark}`,
-      borderRadius: '10px',
-      px: '2rem',
-      py: '1rem',
-      backgroundColor: '#ffffff',
-      minWidth: { xs: '100%', sm: "400px", md: "400px" },
-    }}>
-      <Alert severity={alert.severity || 'warning'}
-        sx={{
-          position: 'fixed', top: '30px',
-          left: '50%',
-          transform: (alert.open) ? 'translateY(0) translateX(-50%)' : 'translateY(-300px) translateX(-50%)',
-          transition: 'transform 0.5s ease-in-out',
-        }}>
-        {alert.message}
-      </Alert>
+    <Box
+      sx={{
+        border: `2px solid ${theme.palette.primary.dark}`,
+        borderRadius: '10px',
+        px: '2rem',
+        py: '2rem',
+        backgroundColor: 'white',
+        boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+        minWidth: { xs: '100%', sm: '400px', md: '400px' },
+      }}
+    >
+      <DisabledPageLoader />
+      <CustomAlert />
       <Box sx={{ textAlign: 'center', my: 3 }}>
-        <Typography variant='h5' fontWeight={'bold'} sx={{ color: theme.palette.primary.main }}>Sign In</Typography>
+        <Typography variant="h5" fontWeight="bold" sx={{ color: theme.palette.primary.main }}>
+          Sign In
+        </Typography>
       </Box>
       <Box>
         <Box sx={{ my: 2 }}>
           <TextField id="email" label="Email" variant="outlined" fullWidth onChange={(e) => dispatch(setEmail(e.target.value))} value={email} />
         </Box>
         <Box sx={{ my: 2 }}>
-          <TextField id="password" label="Password" type={showPassword ? "text" : "password"} variant="outlined" fullWidth onChange={(e) => dispatch(setPassword(e.target.value))} value={password} InputProps={{
-            endAdornment: (
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-              >
-                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-              </IconButton>
-            ),
-          }} />
-
+          <TextField
+            id="password"
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            variant="outlined"
+            fullWidth
+            onChange={(e) => dispatch(setPassword(e.target.value))}
+            value={password}
+            InputProps={{
+              endAdornment: (
+                <IconButton aria-label="toggle password visibility" onClick={() => dispatch(setShowPassword(!showPassword))} edge="end">
+                  {!showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>
+              ),
+            }}
+          />
         </Box>
         <Box sx={{ my: 2 }}>
-          <Button variant="contained" color="primary" fullWidth onClick={handleSignIn}
-            startIcon={loading && <CircularProgress color="secondary" />}>
+          <Button variant="contained" color="primary" fullWidth onClick={handleSignIn}>
             Sign In
           </Button>
         </Box>
+        <Box sx={{ my: 2 }}>
+          <Link href="/forgot-password" color="textPrimary">
+            Forgot password?
+          </Link>
+        </Box>
+        <Divider>
+          <Chip label="OR" variant='outlined' />
+        </Divider>
+        <Box sx={{ my: 4 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            startIcon={<GoogleIcon />}
+            onClick={() => {
+              // Handle continue with Google here
+            }}
+          >
+            Continue with Google
+          </Button>
+        </Box>
+        <Box sx={{ my: 2 }}>
+          <Link href="/auth/signup" color="textPrimary">
+            Not registered yet? Register here.
+          </Link>
+        </Box>
+
       </Box>
-    </Container>
+    </Box>
   );
 };
 

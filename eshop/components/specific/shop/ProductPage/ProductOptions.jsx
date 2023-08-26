@@ -15,9 +15,9 @@ const CartandWisthlist = ({ product }) => {
   const [wish, setWish] = React.useState(false);
   const { cartItems, cart, cartTotal } = useSelector(state => state.cart);
   const { wishlist } = useSelector(state => state.wishlist);
-  console.log(product, cart, wishlist);
-  const { _id, name, price, category, image } = product;
-  const newProduct = { id: _id, name, price, category, image, quantity: 1 };
+  // console.log(product, cart, wishlist);
+  const { _id, name, price, category, image, shopperId } = product;
+  const newProduct = { id: _id, name, price, category, image, quantity: 1, shopperId };
 
   const addToCart = () => {
     console.log("cart items: ", { cartItems, cart, cartTotal });

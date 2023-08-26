@@ -18,7 +18,7 @@ const UserPageLayout = async ({ children }) => {
   const navLinks = [
     { title: 'Home', path: '/', icons: <HomeIcon /> },
     { title: 'Profile', path: `/user/profile`, icons: <AccountCircleIcon /> },
-    { title: 'Orders', path: `/user/orders?email=${encodeURI(email)}`, icons: <LocalShippingIcon /> },
+    { title: 'Orders', path: `/user/orders`, icons: <LocalShippingIcon /> },
     { title: 'Wishlist', path: `/wishlist`, icons: <BookmarkIcon /> },
     { title: 'Cart', path: `/cart`, icons: <ShoppingCartIcon />}
   ];

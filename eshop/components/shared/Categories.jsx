@@ -6,93 +6,79 @@ import React from 'react'
 
 const categories = [
   {
+    title: 'All',
+    href: '/',
+  },
+  {
     title: 'Electronics',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/electronics',
   },
   {
     title: 'Headphones',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/headphones',
   },
   {
     title: 'Clothing',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/clothing',
   },
   {
     title: 'Furniture',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/furniture',
   },
   {
     title: 'Books',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/books',
   },
   {
     title: 'Sports',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/sports',
   },
   {
     title: 'Toys',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/toys',
   },
   {
     title: 'Food',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/food',
   },
   {
     title: 'Health',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/health',
   },
   {
     title: 'Beauty',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/beauty',
   },
   {
     title: 'Jewelry',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/jewelry',
   },
   {
     title: 'Automotive',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/automotive',
   },
   {
     title: 'Garden',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/garden',
   },
   {
     title: 'Pet',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/pet',
   },
   {
     title: 'Baby',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/baby',
   },
   {
     title: 'Tools',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/tools',
   },
   {
     title: 'Office',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/office',
   },
   {
     title: 'Movies',
-    description: 'Explore our wide range of high-quality products.',
     href: '/products/category/movies',
   },
 ];

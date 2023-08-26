@@ -2,22 +2,18 @@ import ShopperOrderBox from '@/components/specific/shop/orders/ShopperOrderBox/S
 import { Box, Paper, Typography } from '@mui/material';
 import React from 'react'
 import { connect } from '@/database/connect'
-import Orders from '@/models/Orders'
 import Users from '@/models/Users'
-import Products from '@/models/Products'
+import { cookies } from 'next/headers';
+import { getUserfromJwt } from '@/utils/auth/auth';
+import { getOrdersWithShopperId } from '@/utils/order/getOrder';
 
-export default async function OrdersPage(request) {
-  console.log(request);
-  const { email } = request.searchParams;
+
+export default async function OrdersPage() {
+  const token = cookies().get('token').value;
+  const { email } = await getUserfromJwt(token);
   await connect();
   const shopper = await Users.findOne({ email });
   const orders = await getOrdersWithShopperId(shopper.id);
-  // sort orders by date
-  orders.sort((a, b) => {
-    return new Date(b.orderDate) - new Date(a.orderDate);
-  });
-
-  console.log("orders: ", orders);
 
   return (
     <Box>
@@ -36,21 +32,3 @@ export default async function OrdersPage(request) {
   )
 }
 
-async function getOrdersWithShopperId(requestedShopperId) {
-  try {
-    await connect();
-    const orders = await Orders.find({
-      'products.shopperId': requestedShopperId
-    })
-      .populate({
-        path: 'products.productId',
-        select: 'name price image'
-      })
-      .exec();
-
-    return orders;
-  } catch (err) {
-    console.error(err);
-    throw err; // Re-throw the error for further handling
-  }
-}

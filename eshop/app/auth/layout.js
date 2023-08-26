@@ -9,7 +9,7 @@ const AuthLayout = ({children}) => {
       alignItems: 'center',
       minHeight: '100vh',
       minWidth: '100vw',
-      backgroundColor: '#fff',
+      backgroundColor: 'white',
     }}>
       {children}
     </Box>

@@ -22,10 +22,10 @@ const UserPageLayout = async ({ children }) => {
     { title: 'Home', path: '/', icons: <HomeIcon /> },
     { title: 'Profile', path: `/shopper/profile`, icons: <AccountCircleIcon /> },
     { title: 'Dashboard', path: `/shopper/dashboard`, icons: <DashboardIcon /> },
-    { title: 'Orders', path: `/shopper/orders?email=${encodeURI(email)}`, icons: <LocalShippingIcon /> },
-    { title: 'Products', path: `/shopper/product`, icons: <StorefrontIcon /> },
+    { title: 'Orders', path: `/shopper/orders`, icons: <LocalShippingIcon /> },
+    { title: 'Products', path: `/shopper/products`, icons: <StorefrontIcon /> },
     { title: 'Earning', path: `/shopper/earning`, icons: <PaidIcon /> },
-    { title: 'Wishlist', path: `/shopper/wishlist`, icons: <BookmarkIcon /> },
+    { title: 'Wishlist', path: `/wishlist`, icons: <BookmarkIcon /> },
   ];
 
   return (

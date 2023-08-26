@@ -7,6 +7,7 @@ const initialState = {
     severity: "success",
   },
   loading: false,
+  disabledLoading: false,
   drawer: false,
 }
 
@@ -21,11 +22,14 @@ const uiStateSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setDisabledLoading: (state, action) => {
+      state.disabledLoading = action.payload;
+    },
     setDrawer: (state, action) => {
       state.drawer = action.payload;
     },
   }
 });
 
-export const { setAlert, setLoading, setDrawer, setCart, setCartItems, setCartTotal, setCartCount } = uiStateSlice.actions;
+export const { setAlert, setLoading, setDrawer, setCart, setCartItems, setCartTotal, setCartCount, setDisabledLoading } = uiStateSlice.actions;
 export default uiStateSlice.reducer;

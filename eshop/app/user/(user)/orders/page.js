@@ -5,19 +5,17 @@ import { connect } from '@/database/connect'
 import Orders from '@/models/Orders'
 import Users from '@/models/Users'
 import Products from '@/models/Products'
+import { cookies } from 'next/headers';
+import { getUserfromJwt } from '@/utils/auth/auth';
+import { getOrdersWithUserId } from '@/utils/order/getOrder';
 
-export default async function OrdersPage(request) {
-  // console.log(request);
-  const { email } = request.searchParams;
+
+export default async function OrdersPage() {
+  const token = cookies().get('token').value;
+  const { username, email, role } = await getUserfromJwt(token);
   await connect();
   const user = await Users.findOne({ email });
   const orders = await getOrdersWithUserId(user.id);
-  // sort orders by date
-  orders.sort((a, b) => {
-    return new Date(b.orderDate) - new Date(a.orderDate);
-  });
-
-  // console.log("orders: ", orders);
 
   return (
     <Box>
@@ -36,25 +34,3 @@ export default async function OrdersPage(request) {
   )
 }
 
-async function getOrdersWithUserId(requestedShopperId) {
-  try {
-    await connect();
-    const orders = await Orders.find({
-      'userId': requestedShopperId
-    })
-      .populate({
-        path: 'products.productId',
-        select: 'name price image'
-      }).
-      populate({
-        path: 'products.shopperId',
-        select: 'name'
-      })
-      .exec();
-
-    return orders;
-  } catch (err) {
-    console.error(err);
-    throw err; // Re-throw the error for further handling
-  }
-}

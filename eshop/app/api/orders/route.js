@@ -10,7 +10,7 @@ export const POST = async (req) => {
     if (!email || (!products || !products.length) || !totalAmount)
       return NextResponse.json({
         status: 400,
-        body: { message: 'email, products and totalAmount are required', success: false, }
+        body: { message: `${!email && "email"} ${!products && "products"} ${!totalAmount && "totalAmount"} is not given.`, success: false, }
       });
 
     const user = await Users.findOne({ email });
