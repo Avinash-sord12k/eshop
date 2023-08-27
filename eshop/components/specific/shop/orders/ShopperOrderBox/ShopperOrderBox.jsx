@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function ShopperOrderBox({ order }) {
   const { _id, totalAmount, status, products, orderDate } = order;
-  // console.log(orderDate);
+  console.log('order: ', order);
   return (
     <Paper elevation={3} style={{ padding: '20px' }}>
       <Box sx={{

@@ -51,6 +51,21 @@ const SideBar = ({ navLinks }) => {
         }}
           onClick={() => setCollapsed(true)}
         />}
+      <IconButton onClick={handleToggleCollapse}
+        sx={{
+          position: 'fixed',
+          top: '8px',
+          left: '8px',
+          color: theme.palette.primary.contrastText,
+          width: '40px',
+          height: '40px',
+          backgroundColor: 'primary.main',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {collapsed ? <MenuIcon /> : <CloseIcon />}
+      </IconButton>
       <Box sx={{
         position: 'fixed',
         zIndex: 10000,
@@ -66,16 +81,16 @@ const SideBar = ({ navLinks }) => {
         alignItems: 'end',
         textAlign: 'center',
         transition: 'width 0.3s ease-in-out',
+        '@media (max-width: 600px)': {
+          transform: collapsed ? 'translateX(-100%)' : 'translateX(0%)',
+        },
       }}>
         <IconButton onClick={handleToggleCollapse}
           sx={{
             color: theme.palette.primary.contrastText,
             paddingRight: '20px',
+            backgroundColor: 'primary.main',
             top: '10px',
-            '&:hover': {
-              backgroundColor: 'transparent',
-              cursor: 'pointer',
-            },
           }}>
           {collapsed ? <MenuIcon /> : <CloseIcon />}
         </IconButton>

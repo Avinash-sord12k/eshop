@@ -25,7 +25,7 @@ const ProductCardContainer = styled(Card)(({ theme }) => ({
 
 const ProductImage = styled(CardMedia)(({ theme }) => ({
   height: 194,
-  objectFit: 'cover', // Ensure the image fits well in the container
+  objectFit: 'contain', // Ensure the image fits well in the container
 }));
 
 export default function ProductInfoCard({ options, index }) {
@@ -58,7 +58,6 @@ export default function ProductInfoCard({ options, index }) {
     }
   };
 
-
   return (
     <>
       <ProductCardContainer>
@@ -73,19 +72,22 @@ export default function ProductInfoCard({ options, index }) {
         )}
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            {name}
+            {name.slice(0, 20)}...
           </Typography>
-          <Chip label={category} color="secondary" size="small" />
-          <Typography variant="body2" color="text.secondary" mt={1}>
-            {description}
-          </Typography>
+          {category && <Chip label={category} color="secondary" size="small" />}
+          {description &&
+            <Typography variant="body2" color="text.secondary" mt={1}>
+              {description.slice(0, 30)}...
+            </Typography>}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-            <Typography variant="h6" color="primary">
-              ₹{price}
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              {stock} Left
-            </Typography>
+            {price &&
+              <Typography variant="h6" color="primary">
+                ₹{price}
+              </Typography>}
+            {stock &&
+              <Typography variant="body1" color="text.secondary">
+                {stock} Left
+              </Typography>}
           </Box>
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>

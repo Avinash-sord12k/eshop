@@ -13,41 +13,55 @@ const AllProducts = async () => {
   return (
     <>
 
-      <Typography variant="h6" fontWeight={'bold'} mt={10}> SALE </Typography>
-      <Box sx={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-        gridGap: '1rem',
-        my: 2,
-      }}>
-        {onSaleProducts.map(product => (
-          <Card key={product._doc._id} product={product._doc} />
-        ))}
-      </Box>
+      {onSaleProducts.length > 0 &&
+        <>
+          <Typography variant="h6" fontWeight={'bold'} mt={10}> SALE </Typography>
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+            gridGap: '1rem',
+            my: 2,
+            justifyItems: 'stretch',
+          }}>
+            {onSaleProducts.map(product => (
+              <Card key={product._doc._id} product={product._doc} />
+            ))}
+          </Box>
+        </>}
 
-      <Typography variant="h6" fontWeight={'bold'} mt={10}> Featured Products </Typography>
-      <Box sx={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-        gridGap: '1rem',
-        my: 2,
-      }}>
-        {featuredProducts.map(product => (
-          <Card key={product._doc._id} product={product._doc} />
-        ))}
-      </Box>
+      {
+        featuredProducts.length > 0 &&
+        <>
+          <Typography variant="h6" fontWeight={'bold'} mt={10}> Featured Products </Typography>
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+            gridGap: '1rem',
+            my: 2,
+          }}>
+            {featuredProducts.map(product => (
+              <Card key={product._doc._id} product={product._doc} />
+            ))}
+          </Box>
+        </>
+      }
 
-      <Typography variant="h6" fontWeight={'bold'} mt={10}> All Products </Typography>
-      <Box sx={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-        gridGap: '1rem',
-        my: 2,
-      }}>
-        {basicProducts.map(product => (
-          <Card key={product._doc._id} product={product._doc} />
-        ))}
-      </Box>
+      {
+        basicProducts.length > 0 &&
+        <>
+          <Typography variant="h6" fontWeight={'bold'} mt={10}> All Products </Typography>
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+            gridGap: '1rem',
+            my: 2,
+          }}>
+            {basicProducts.map(product => (
+              <Card key={product._doc._id} product={product._doc} />
+            ))}
+          </Box>
+        </>
+      }
 
 
     </>

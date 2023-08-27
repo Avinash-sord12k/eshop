@@ -8,8 +8,8 @@ import { getUserfromJwt, isPermitted } from '@/utils/auth/auth';
 
 
 export const POST = async (request) => {
-  console.log(request.cookies.get('token'));
   try {
+    console.log("add new product request: ");
     await connect();
     const { email } = await getUserfromJwt(request.cookies.get('token').value);
     const { name, price, description, image, category, stock, isFeatured, isOnSale } = await request.json();

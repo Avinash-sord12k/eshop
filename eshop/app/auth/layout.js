@@ -1,7 +1,8 @@
+import DisabledPageLoader from '@/components/common/Progress/DisabledPageLoader'
 import { Backdrop, Box, Container } from '@mui/material'
 import React from 'react'
 
-const AuthLayout = ({children}) => {
+const AuthLayout = ({ children }) => {
   return (
     <Box sx={{
       display: 'flex',
@@ -11,6 +12,7 @@ const AuthLayout = ({children}) => {
       minWidth: '100vw',
       backgroundColor: 'white',
     }}>
+      <DisabledPageLoader />
       {children}
     </Box>
   )

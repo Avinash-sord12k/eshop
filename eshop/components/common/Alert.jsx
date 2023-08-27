@@ -13,7 +13,7 @@ const CustomAlert = () => {
   useEffect(() => {
     if (open) {
       setTimeout(() => {
-        dispatch(setAlert({ open: false, severity: 'success', message: '' }));
+        dispatch(setAlert({...alert, open: false, message: '' }));
       }, 3000);
     }
   }, [open]);

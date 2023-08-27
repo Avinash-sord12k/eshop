@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
+    required: true,
   },
   description: {
     type: String,
@@ -22,7 +23,8 @@ const productSchema = new mongoose.Schema({
   },
   stock: {
     type: Number,
-    required: true
+    default: 0,
+    required: false,
   },
   shopperId: {
     type: mongoose.Schema.Types.ObjectId,

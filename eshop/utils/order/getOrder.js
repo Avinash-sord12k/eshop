@@ -14,9 +14,10 @@ export async function getOrdersWithShopperId(requestedShopperId) {
       })
       .exec();
 
+    orders.forEach(order => console.log("order: ", JSON.stringify(order.product), "\n\n"));
     orders = orders.map(order => {
       order.products = order.products.filter(product => product.shopperId == requestedShopperId);
-      order.totalAmount = order.products.reduce((acc, product) => acc + product.productId.price * product.quantity, 0);
+      // order.totalAmount = order.products.reduce((acc, product) => acc + (product.productId.price) * product.quantity, 0);
       return order
     });
 
@@ -46,11 +47,11 @@ export async function getOrdersWithUserId(requestedShopperId) {
         select: 'name'
       })
       .exec();
-    
-    orders.map(order => {
-      order.totalAmount = order.products.reduce((acc, product) => acc + product.productId.price * product.quantity, 0);
-      return order
-    })
+
+    // orders.map(order => {
+    //   order.totalAmount = order.products.reduce((acc, product) => acc + product.productId.price * product.quantity, 0);
+    //   return order
+    // })
 
     orders.sort((a, b) => {
       return new Date(b.orderDate) - new Date(a.orderDate);

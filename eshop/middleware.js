@@ -51,5 +51,5 @@ export default async function middleware(request) {
   }
 }
 export const config = {
-  matcher: ['/((?!api|_next/static|favicon.ico|auth/signin|auth/signup|illustrations).*)',],
+  matcher: ['/((?!api|_next/static|favicon.ico|auth|illustrations).*)',],
 }

@@ -40,7 +40,8 @@ const Signin = () => {
 
       if (data.body.success) {
         const { username, role } = data.body.user;
-        const { image, permissions, email, userId } = data.body.user;
+        const { image, email, userId } = data.body.user;
+        const { name, permissions } = role;
         dispatch(setLogin({ username, role: role.name, image, permissions, email, userId }));
         e.target.blur();
         router.push('/');
@@ -105,7 +106,7 @@ const Signin = () => {
           </Button>
         </Box>
         <Box sx={{ my: 2 }}>
-          <Link href="/forgot-password" color="textPrimary">
+          <Link href="/auth/forgotPassword" color="textPrimary" onClick={() => dispatch(setDisabledLoading(true))}>
             Forgot password?
           </Link>
         </Box>

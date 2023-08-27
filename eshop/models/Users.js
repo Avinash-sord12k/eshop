@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+  // Existing fields
   username: {
     type: String,
     required: true,
@@ -28,7 +29,25 @@ const userSchema = new mongoose.Schema({
   resetOtpExpiry: Date,
   verificationToken: String,
   verificationTokenExpiry: Date,
-})
+  
+  // New shopper-specific fields
+  image: String,
+  businessType: String,
+  description: String,
+  products: [String],
+  services: String,
+  companyGrowth: String,
+  stockExchange: String,
+  address: String,
+  startedYear: String,
+  contactEmail: String,
+  contactPhone: String,
+  socialLinks: {
+    facebook: String,
+    instagram: String,
+    twitter: String,
+  },
+});
 
 const User = mongoose.models.Users || mongoose.model("Users", userSchema);
 

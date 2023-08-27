@@ -125,7 +125,7 @@ const Signup = () => {
               Sign Up
             </Button>
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-              <Link href="/auth/signup" color="textPrimary">
+              <Link href="/auth/signin" color="textPrimary">
                 Already registered? Sign in here.
               </Link>
             </Box>

@@ -49,7 +49,7 @@ async function getUserfromJwt(token) {
 		issuer: "eshop",
 		audience: "eshop-users"
 	});
-	console.log("decoded: ", decoded);
+	// console.log("decoded: ", decoded);
 	return decoded.payload;
 }
 

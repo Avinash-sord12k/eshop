@@ -11,8 +11,11 @@ import { Roboto } from 'next/font/google';
 //   display: 'swap',
 // });
 
-let theme = createTheme({
+// import { createTheme } from '@mui/material/styles';
+
+let lightTheme = createTheme({
   palette: {
+    mode: 'light',
     primary: {
       main: '#673ab7', // Purple color for primary elements
       contrastText: '#fff',
@@ -29,10 +32,9 @@ let theme = createTheme({
       paper: '#fff',
       default: '#f5f5f5',
     },
-    mode: 'light',
   },
   typography: {
-    fontFamily: 'Poppins, Roboto, sans-serif',
+    fontFamily: 'Poppins, sans-serif',
     h1: {
       fontSize: '2.5rem',
       fontWeight: 700,
@@ -75,12 +77,81 @@ let theme = createTheme({
     // Customize other components as needed
   },
 });
-theme = responsiveFontSizes(theme);
+
+// Dark theme configuration
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#673ab7', // Purple color for primary elements
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#ff4081', // Pink color for secondary elements
+      contrastText: '#fff',
+    },
+    text: {
+      primary: '#fff',
+      secondary: '#bbb',
+    },
+    background: {
+      paper: '#333', // Dark background color
+      default: '#222', // Dark default background color
+    },
+  },
+  typography: {
+    fontFamily: 'Poppins, sans-serif',
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 700,
+      color: '#673ab7',
+    },
+    h2: {
+      fontSize: '2rem',
+      fontWeight: 600,
+      color: '#673ab7',
+    },
+    h3: {
+      fontSize: '1.5rem',
+      fontWeight: 600,
+      color: '#673ab7',
+    },
+  },
+  spacing: factor => `${0.25 * factor}rem`,
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          background: '#673ab7', // Purple color for app bar
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          background: '#673ab7', // Purple color for drawer background
+        },
+      },
+    },
+    // Customize other components as needed
+  },
+});
+
+// export { theme, darkTheme };
+
+const themeWithResponsiveFont = responsiveFontSizes(lightTheme);
 
 export default function ThemeRegistry({ children }) {
   return (
     <NextAppDirEmotionCacheProvider options={{ key: 'mui' }}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={themeWithResponsiveFont}>
         <CssBaseline />
         {children}
       </ThemeProvider>

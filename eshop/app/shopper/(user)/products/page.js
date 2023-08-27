@@ -1,14 +1,42 @@
 "use client";
 
 import ProductsView from '@/components/specific/shop/ProductsView';
-import { Box, Grid, Typography, Modal, TextField, Button, Fade, Checkbox, CircularProgress } from '@mui/material'
+import { Box, Typography, Modal, TextField, Button, Fade, CircularProgress, Tabs, Tab, Input, InputLabel } from '@mui/material'
 import SaveIcon from '@mui/icons-material/Save';
-import LoopIcon from '@mui/icons-material/Loop';
 import CheckIcon from '@mui/icons-material/Check';
 import React from 'react'
 import ProductManagementBar from '@/components/specific/shop/ProductManagementBar';
+import CustomAlert from '@/components/common/Alert';
+import { useSelector, useDispatch } from 'react-redux';
+import { setAlert, setDisabledLoading } from '@/store/uiStateSlice/uiStateSlice';
+import DisabledPageLoader from '@/components/common/Progress/DisabledPageLoader';
+import { set } from 'mongoose';
 
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
 
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <>{children}</>
+        </Box>
+      )}
+    </div>
+  );
+}
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 const ManageProducts = () => {
 
@@ -17,17 +45,22 @@ const ManageProducts = () => {
   const [openModal, setOpenModal] = React.useState(null);
   const handleClose = () => { setOpenModal(null); setEditedProduct({}) };
   const handleOpen = (index) => { setOpenModal(index); setEditedProduct(products[index]) };
-  const [updateAlert, setUpdateAlert] = React.useState('');
   const [updateLoading, setUpdateLoading] = React.useState(false);
   const [editedProduct, setEditedProduct] = React.useState({});
   const [filterOption, setFilterOption] = React.useState('all');
   const [searchQuery, setSearchQuery] = React.useState('');
+
   const [addProductModal, setAddProductModal] = React.useState(null);
+  const [tabPosition, setTabPosition] = React.useState(0);
   const handleAddProductModalClose = () => setAddProductModal(null);
   const handleAddProductModalOpen = () => setAddProductModal(true);
+  const [notFound, setNotFound] = React.useState(false);
   const [newProduct, setNewProduct] = React.useState({
     name: '', price: '', stock: '', image: '', description: '', isFeatured: false, isOnSale: false, category: ''
   });
+  const dispatch = useDispatch();
+  const { disabledLoading } = useSelector(state => state.ui);
+
   const handlUpdateProductInputChange = (e) => {
     const { name, value } = e.target;
     setEditedProduct({ ...editedProduct, [name]: value });
@@ -37,6 +70,7 @@ const ManageProducts = () => {
     setNewProduct({ ...newProduct, [name]: value });
   }
   const getProducts = async () => {
+    dispatch(setDisabledLoading(true));
     const res = await fetch('/api/products/shopper', {
       method: 'POST',
       headers: {
@@ -46,12 +80,17 @@ const ManageProducts = () => {
     });
     const data = await res.json();
     console.log(data);
+    dispatch(setDisabledLoading(false));
+    if (!data.body.success) {
+      dispatch(setAlert({ message: data.body.message, severity: 'error', open: true }));
+      return setNotFound(true);
+    } else setNotFound(false);
     setProducts(data.body.products);
     setProductsToShow(data.body.products);
   }
   const handleSaveUpdateToServer = async () => {
-    setUpdateLoading(true);
-    const res = await fetch(`api/products`, {
+    dispatch(setDisabledLoading(true));
+    const res = await fetch(`http://localhost:3000/api/products`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -61,31 +100,38 @@ const ManageProducts = () => {
     });
     const data = await res.json();
     console.log(data);
+    dispatch(setDisabledLoading(false));
     if (data.body.success) {
       handleClose();
-      setUpdateLoading(false);
       getProducts();
     }
-    setUpdateAlert(data.body.message);
+    dispatch(setAlert({ message: data.body.message, severity: data.body.success ? "success" : "warning", open: true }));
   }
   const handleSaveNewToServer = async () => {
-    setUpdateLoading(true);
-    const res = await fetch(`api/products`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'withCredentials': true
-      },
-      body: JSON.stringify({ ...newProduct })
-    });
-    const data = await res.json();
-    console.log(data);
-    if (data.body.success) {
-      handleAddProductModalClose();
-      setUpdateLoading(false);
+    dispatch(setDisabledLoading(true));
+    console.log("newProduct: ", newProduct);
+    try {
+      const res = await fetch(`http://localhost:3000/api/products`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'withCredentials': true
+        },
+        body: JSON.stringify({ ...newProduct })
+      });
+      const data = await res.json();
+      console.log(data);
+      dispatch(setDisabledLoading(false));
+      if (data.body.success) {
+        handleAddProductModalClose();
+      }
+      dispatch(setAlert({ message: "", }));
+      getProducts();
+    } catch (error) {
+      dispatch(setDisabledLoading(false));
+      console.log(error);
+      dispatch(setAlert({ message: error.message, severity: 'error', open: true }));
     }
-    setUpdateAlert(data.body.message);
-    getProducts();
   }
   const handleSearch = (searchQuery, filterOption) => {
     console.log("searched: ", searchQuery, filterOption);
@@ -120,6 +166,42 @@ const ManageProducts = () => {
     console.log(option, filterOption);
     handleSearch(searchQuery, option);
   }
+  const handleTabPositionChange = (e, newValue) => {
+    setTabPosition(newValue);
+  }
+  const handleFileUpload = async (e) => {
+    try {
+      e.preventDefault();
+      dispatch(setDisabledLoading(true));
+      const file = e.target.files[0];
+      if (!file) dispatch(setAlert({ message: "No file selected", severity: 'warning', open: true }));
+      const data = new FormData();
+      data.set('file', file);
+      console.log(data);
+      const res = await fetch(`http://localhost:3000/api/products/json`, {
+        method: 'POST',
+        headers: {
+          'withCredentials': true
+        },
+        body: data
+      });
+      const resData = await res.json();
+      console.log(resData);
+      dispatch(setDisabledLoading(false));
+      if (resData.body.success) {
+        dispatch(setAlert({ message: resData.body.message, severity: 'success', open: true }));
+        getProducts();
+        return;
+      }
+      dispatch(setAlert({ message: resData.body.message, severity: 'warning', open: true }));
+      console.log(resData);
+    } catch (error) {
+      dispatch(setDisabledLoading(false));
+      console.log(error);
+      dispatch(setAlert({ message: error.message, severity: 'error', open: true }));
+    }
+  }
+
   React.useEffect(() => {
     getProducts();
   }, []);
@@ -127,6 +209,8 @@ const ManageProducts = () => {
 
   return (
     <Box mt={5}>
+      <CustomAlert />
+      <DisabledPageLoader />
       <Box>
         <ProductManagementBar data={{
           handleSelectFilterOption,
@@ -136,20 +220,18 @@ const ManageProducts = () => {
         }} />
       </Box>
       <Box sx={{ mt: '40px', mr: '40px' }} >
+        {console.log(disabledLoading)}
+        {notFound && <Typography variant='h5' sx={{ textAlign: 'center' }}>No Products Found</Typography>}
         <ProductsView products={productsToShow} getProducts={getProducts} openModal={handleOpen} />
       </Box>
+
       <Modal
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-        open={addProductModal != null}
-        onClose={handleAddProductModalClose}
+        open={openModal != null}
+        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Fade in={addProductModal}>
+        <Box>
           <Box sx={{
             position: 'absolute',
             top: '50%',
@@ -162,13 +244,21 @@ const ManageProducts = () => {
             p: 4,
           }}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Add Product
+              Edit Product
             </Typography>
             <TextField
               label="Name"
               name="name"
-              value={newProduct.name || ''}
-              onChange={handlNewProductInputChange}
+              value={editedProduct.name || ''}
+              onChange={handlUpdateProductInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Category"
+              name="category"
+              value={editedProduct.category || ''}
+              onChange={handlUpdateProductInputChange}
               fullWidth
               margin="normal"
             />
@@ -176,8 +266,8 @@ const ManageProducts = () => {
               label="Price"
               name="price"
               type="number"
-              value={newProduct.price || ''}
-              onChange={handlNewProductInputChange}
+              value={editedProduct.price || ''}
+              onChange={handlUpdateProductInputChange}
               fullWidth
               margin="normal"
             />
@@ -185,8 +275,8 @@ const ManageProducts = () => {
               label="Stock"
               name="stock"
               type="number"
-              value={newProduct.stock || ''}
-              onChange={handlNewProductInputChange}
+              value={editedProduct.stock || ''}
+              onChange={handlUpdateProductInputChange}
               fullWidth
               margin="normal"
             />
@@ -194,30 +284,11 @@ const ManageProducts = () => {
               label="Image"
               name="image"
               type="text"
-              value={newProduct.image || ''}
-              onChange={handlNewProductInputChange}
+              value={editedProduct.image || ''}
+              onChange={handlUpdateProductInputChange}
               fullWidth
               margin="normal"
             />
-            <TextField
-              label="Category"
-              name="category"
-              type="text"
-              value={newProduct.category || ''}
-              onChange={handlNewProductInputChange}
-              fullWidth
-              margin="normal"
-            />
-            <Button variant={newProduct.isFeatured ? 'contained' : 'text'} sx={{ mr: 2 }}
-              startIcon={newProduct.isFeatured && <CheckIcon />}
-              onClick={() => setNewProduct({ ...newProduct, isFeatured: !newProduct.isFeatured })}>
-              Featured
-            </Button>
-            <Button variant={newProduct.isOnSale ? 'contained' : 'text'} sx={{ mr: 2 }}
-              startIcon={newProduct.isOnSale && <CheckIcon />}
-              onClick={() => setNewProduct({ ...newProduct, isOnSale: !newProduct.isOnSale })}>
-              On Sale
-            </Button>
             <TextField
               id="outlined-multiline-flexible"
               label="Description"
@@ -225,98 +296,144 @@ const ManageProducts = () => {
               multiline
               fullWidth
               maxRows={4}
-              value={newProduct.description || ''}
-              onChange={handlNewProductInputChange}
+              value={editedProduct.description || ''}
+              onChange={handlUpdateProductInputChange}
               margin="normal"
             />
-            {/* Add more fields for other product details */}
             <Button variant="contained"
-              startIcon={updateLoading
-                ? <CircularProgress color="inherit" />
-                : <SaveIcon />}
-              color="primary"
-              onClick={handleSaveNewToServer}>
+              startIcon={updateLoading ? <CircularProgress color="inherit" sx={{
+                transform: 'scale(0.5)',
+              }} /> : <SaveIcon />} color="primary" onClick={handleSaveUpdateToServer}>
               Save Changes
             </Button>
           </Box>
-        </Fade>
 
+        </Box>
       </Modal>
+
       <Modal
-        open={openModal != null}
-        onClose={handleClose}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+        open={addProductModal != null}
+        onClose={handleAddProductModalClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          rounded: 'lg',
-          transform: 'translate(-50%, -50%)',
-          width: 400,
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-        }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit Product
-          </Typography>
-          <TextField
-            label="Name"
-            name="name"
-            value={editedProduct.name || ''}
-            onChange={handlUpdateProductInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Price"
-            name="price"
-            type="number"
-            value={editedProduct.price || ''}
-            onChange={handlUpdateProductInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Stock"
-            name="stock"
-            type="number"
-            value={editedProduct.stock || ''}
-            onChange={handlUpdateProductInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Image"
-            name="image"
-            type="text"
-            value={editedProduct.image || ''}
-            onChange={handlUpdateProductInputChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            id="outlined-multiline-flexible"
-            label="Description"
-            name='description'
-            multiline
-            fullWidth
-            maxRows={4}
-            value={editedProduct.description || ''}
-            onChange={handlUpdateProductInputChange}
-            margin="normal"
-          />
-          {/* Add more fields for other product details */}
-          <Button variant="contained"
-            startIcon={updateLoading ? <CircularProgress color="inherit" sx={{
-              transform: 'scale(0.5)',
-            }} /> : <SaveIcon />} color="primary" onClick={handleSaveUpdateToServer}>
-            Save Changes
-          </Button>
-        </Box>
-
+        <Fade in={addProductModal !== null}>
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: 400,
+              bgcolor: 'background.paper',
+              boxShadow: 24,
+              p: 0,
+              borderRadius: '10px',
+            }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Tabs value={tabPosition} onChange={handleTabPositionChange} aria-label="basic tabs example">
+                <Tab label="Upload One" {...a11yProps(0)} />
+                <Tab label="UPload Many" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <CustomTabPanel value={tabPosition} index={0}>
+              <Box sx={{
+                p: 4,
+              }}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Add Product
+                </Typography>
+                <TextField size='small'
+                  label="Name"
+                  name="name"
+                  value={newProduct.name || ''}
+                  onChange={handlNewProductInputChange}
+                  fullWidth
+                  margin="dense"
+                />
+                <TextField size='small'
+                  label="Price"
+                  name="price"
+                  type="number"
+                  value={newProduct.price || ''}
+                  onChange={handlNewProductInputChange}
+                  fullWidth
+                  margin="dense"
+                />
+                <TextField size='small'
+                  label="Stock"
+                  name="stock"
+                  type="number"
+                  value={newProduct.stock || ''}
+                  onChange={handlNewProductInputChange}
+                  fullWidth
+                  margin="dense"
+                />
+                <TextField size='small'
+                  label="Image"
+                  name="image"
+                  type="text"
+                  value={newProduct.image || ''}
+                  onChange={handlNewProductInputChange}
+                  fullWidth
+                  margin="dense"
+                />
+                <TextField size='small'
+                  label="Category"
+                  name="category"
+                  type="text"
+                  value={newProduct.category || ''}
+                  onChange={handlNewProductInputChange}
+                  fullWidth
+                  margin="dense"
+                />
+                <Button size='small' variant={newProduct.isFeatured ? 'contained' : 'text'} sx={{ mr: 2 }}
+                  startIcon={newProduct.isFeatured && <CheckIcon />}
+                  onClick={() => setNewProduct({ ...newProduct, isFeatured: !newProduct.isFeatured })}>
+                  Featured
+                </Button>
+                <Button size='small' variant={newProduct.isOnSale ? 'contained' : 'text'} sx={{ mr: 2 }}
+                  startIcon={newProduct.isOnSale && <CheckIcon />}
+                  onClick={() => setNewProduct({ ...newProduct, isOnSale: !newProduct.isOnSale })}>
+                  On Sale
+                </Button>
+                <TextField size='small'
+                  id="outlined-multiline-flexible"
+                  label="Description"
+                  name='description'
+                  multiline
+                  fullWidth
+                  maxRows={4}
+                  value={newProduct.description || ''}
+                  onChange={handlNewProductInputChange}
+                  margin="dense"
+                />
+                <Button variant="contained"
+                  startIcon={updateLoading
+                    ? <CircularProgress color="inherit" />
+                    : <SaveIcon />}
+                  color="primary"
+                  onClick={handleSaveNewToServer}>
+                  Save Changes
+                </Button>
+              </Box>
+            </CustomTabPanel>
+            <CustomTabPanel value={tabPosition} index={1}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">Upload Json</Typography>
+              <InputLabel htmlFor="json-file-upload">Upload JSON File</InputLabel>
+              <Input
+                type="file"
+                accept=".json"
+                onChange={handleFileUpload}
+              />
+            </CustomTabPanel>
+          </Box>
+        </Fade>
       </Modal>
     </Box>
   )

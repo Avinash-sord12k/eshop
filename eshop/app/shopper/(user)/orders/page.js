@@ -5,7 +5,9 @@ import { connect } from '@/database/connect'
 import Users from '@/models/Users'
 import { cookies } from 'next/headers';
 import { getUserfromJwt } from '@/utils/auth/auth';
-import { getOrdersWithShopperId } from '@/utils/order/getOrder';
+import Orders from '@/models/Orders';
+import Products from '@/models/Products';
+// import { getOrdersWithShopperId } from '@/utils/order/getOrder';
 
 
 export default async function OrdersPage() {
@@ -14,7 +16,7 @@ export default async function OrdersPage() {
   await connect();
   const shopper = await Users.findOne({ email });
   const orders = await getOrdersWithShopperId(shopper.id);
-
+  orders.forEach((order, index) => console.log(`order: ${index}`, JSON.stringify(order), "\n\n"));
   return (
     <Box>
       <Typography mt={4} variant={'h1'} pl={'20px'}>Orders</Typography>
@@ -32,3 +34,32 @@ export default async function OrdersPage() {
   )
 }
 
+export async function getOrdersWithShopperId(requestedShopperId) {
+  try {
+    await connect();
+    let orders = await Orders.find({
+      'products.shopperId': requestedShopperId
+    })
+      .populate({
+        path: 'products.productId',
+        select: 'name price image'
+      })
+      .exec();
+
+    orders.forEach(order => console.log("order: ", JSON.stringify(order.product), "\n\n"));
+    orders = orders.map(order => {
+      order.products = order.products.filter(product => product.shopperId == requestedShopperId);
+      order.totalAmount = order.products.reduce((acc, product) => acc + (product.productId.price) * product.quantity, 0);
+      return order
+    });
+
+    orders.sort((a, b) => {
+      return new Date(b.orderDate) - new Date(a.orderDate);
+    });
+
+    return orders;
+  } catch (err) {
+    console.error("Error in getOrdersWithShopperId: ", err);
+    throw err;
+  }
+}

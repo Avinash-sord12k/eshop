@@ -28,8 +28,8 @@ export const POST = async (request) => {
         }
       });
     }
-    console.log(otp, user.resetOtp);
-    if (user.resetOtp !== otp) {
+    console.log(typeof otp, typeof user.resetOtp);
+    if (parseInt(user.resetOtp) !== parseInt(otp)) {
       return NextResponse.json({
         status: 400,
         body: {

@@ -20,21 +20,22 @@ const UserPageLayout = async ({ children }) => {
 
   const navLinks = [
     { title: 'Home', path: '/', icons: <HomeIcon /> },
-    { title: 'Profile', path: `/shopper/profile`, icons: <AccountCircleIcon /> },
-    { title: 'Dashboard', path: `/shopper/dashboard`, icons: <DashboardIcon /> },
-    { title: 'Orders', path: `/shopper/orders`, icons: <LocalShippingIcon /> },
     { title: 'Products', path: `/shopper/products`, icons: <StorefrontIcon /> },
+    { title: 'Orders', path: `/shopper/orders`, icons: <LocalShippingIcon /> },
+    { title: 'Dashboard', path: `/shopper/dashboard`, icons: <DashboardIcon /> },
     { title: 'Earning', path: `/shopper/earning`, icons: <PaidIcon /> },
     { title: 'Wishlist', path: `/wishlist`, icons: <BookmarkIcon /> },
+    { title: 'Profile', path: `/shopper/profile`, icons: <AccountCircleIcon /> },
   ];
 
   return (
     <>
       <SideBar navLinks={navLinks} />
       <Box sx={{
-        marginLeft: '100px',
+        mt: { xs: '10px', sm: '20px' },
+        ml: { xs: '10px', sm: '75px' },
         transition: 'margin-left 0.3s ease-in-out',
-        marginRight: '40px',
+        mr: { xs: '10px', sm: '15px', md: '20px', lg: '30px', xl: '40px' },
       }}>
         {children}
       </Box>
