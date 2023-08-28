@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Grid, Typography, Button, IconButton, Rating, Container } from '@mui/material';
 import { connect } from '@/database/connect';
 import Products from '@/models/Products';
-import Card from '@/components/common/ProductCard/ProductCard'
+import ProductCard from '@/components/common/ProductCard/ProductCard'
 import ProductOptions from '@/components/specific/shop/ProductPage/ProductOptions';
 
 
@@ -10,9 +10,26 @@ const ProductPage = async ({ params }) => {
 
   const { id } = params;
   await connect();
-  const product = await Products.findById(params.id);
+  const product = await Products.findById(params.id)
+    .select('_id name price description category image')
+    .lean();
+
   const { category } = product;
-  const sameCategoryProducts = await Products.find({ category: category }).limit(4);
+  const sameCategoryProducts = await Products.find({ category: category })
+    .select('_id name price description category image')
+    .limit(4)
+    .lean();
+
+  const convertIdToString = products => {
+    return products.map(product => {
+      product._id = product._id.toString(); // Convert _id to string
+      return product;
+    });
+  };
+
+  product._id = product._id.toString();
+  convertIdToString(sameCategoryProducts);
+
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -51,7 +68,7 @@ const ProductPage = async ({ params }) => {
             justifyItems: 'stretch',
           }}>
             {sameCategoryProducts.map(product => (
-              <Card key={product._doc._id} product={product._doc} />
+              <ProductCard key={product._id} product={product} />
             ))}
           </Box>
         </Box>}

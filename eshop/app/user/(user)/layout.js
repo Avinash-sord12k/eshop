@@ -27,9 +27,10 @@ const UserPageLayout = async ({ children }) => {
     <>
       <SideBar navLinks={navLinks} />
       <Box sx={{
-        marginLeft: '100px',
+        mt: { xs: '10px', sm: '20px' },
+        ml: { xs: '10px', sm: '75px' },
         transition: 'margin-left 0.3s ease-in-out',
-        marginRight: '40px',
+        mr: { xs: '10px', sm: '15px', md: '20px', lg: '30px', xl: '40px' },
       }}>
         {children}
       </Box>

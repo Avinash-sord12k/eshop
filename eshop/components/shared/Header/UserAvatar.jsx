@@ -11,8 +11,8 @@ import Link from 'next/link';
 const UserAvatar = ({ props }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { username, roleName: role } = props;
-  const { isAuth, image } = useSelector(state => state.auth);
+  const { username, roleName: role, image } = props;
+  // const { isAuth, image } = useSelector(state => state.auth);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [client, setClient] = React.useState(false);
   const settings = [

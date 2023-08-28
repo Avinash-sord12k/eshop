@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setEmail, setPassword, setConfirmPassword, setUsername, setRole } from '@/store/signupSlice/signupSlice';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { setAlert } from '@/store/uiStateSlice/uiStateSlice';
+import { setAlert, setDisabledLoading } from '@/store/uiStateSlice/uiStateSlice';
 import { Divider } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
+import DisabledPageLoader from '@/components/common/Progress/DisabledPageLoader';
+import CustomAlert from '@/components/common/Alert';
 
 
 const Signup = () => {
@@ -19,6 +21,7 @@ const Signup = () => {
 
   const handleSignUp = async () => {
     console.log("Sign Up");
+    dispatch(setDisabledLoading(true));
     router.prefetch('/auth/signin');
     try {
       const response = await fetch('/api/auth/signup', {
@@ -36,6 +39,20 @@ const Signup = () => {
       });
       const data = await response.json();
       console.log(data);
+      dispatch(setDisabledLoading(false));
+      if (!data.body.success) {
+        dispatch(setAlert({
+          severity: 'error',
+          message: data.body.message,
+          open: true,
+        }));
+        return;
+      }
+      dispatch(setAlert({
+        severity: 'success',
+        message: data.body.message,
+        open: true,
+      }));
       router.push('/auth/signin');
     } catch (error) {
       console.log(error);
@@ -51,6 +68,8 @@ const Signup = () => {
       border: `2px solid ${theme.palette.primary.main}`,
       boxShadow: '0px 0px 10px rgba(0,0,0,0.3)',
     }}>
+      <DisabledPageLoader />
+      <CustomAlert />
       <Grid container spacing={4}>
         <Grid item xs={12} sm={6} sx={{
           display: {
@@ -138,7 +157,11 @@ const Signup = () => {
                 color="primary"
                 fullWidth
                 startIcon={<GoogleIcon />}
-                onClick={() => {}}
+                onClick={() => dispatch(setAlert({
+                  severity: 'warning',
+                  message: 'Google Sign In is not yet implemented',
+                  open: true,
+                }))}
               >
                 Continue with Google
               </Button>

@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setAlert, setDisabledLoading } from '@/store/uiStateSlice/uiStateSlice';
 import DisabledPageLoader from '@/components/common/Progress/DisabledPageLoader';
 import { set } from 'mongoose';
+import NotFound from '@/components/common/Erros/NotFound';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -85,6 +86,7 @@ const ManageProducts = () => {
       dispatch(setAlert({ message: data.body.message, severity: 'error', open: true }));
       return setNotFound(true);
     } else setNotFound(false);
+    if (data.body.products.length == 0) return setNotFound(true);
     setProducts(data.body.products);
     setProductsToShow(data.body.products);
   }
@@ -220,8 +222,7 @@ const ManageProducts = () => {
         }} />
       </Box>
       <Box sx={{ mt: '40px', mr: '40px' }} >
-        {console.log(disabledLoading)}
-        {notFound && <Typography variant='h5' sx={{ textAlign: 'center' }}>No Products Found</Typography>}
+        {notFound && <NotFound /> }
         <ProductsView products={productsToShow} getProducts={getProducts} openModal={handleOpen} />
       </Box>
 

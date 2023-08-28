@@ -7,6 +7,7 @@ import { cookies } from 'next/headers';
 import { getUserfromJwt } from '@/utils/auth/auth';
 import Orders from '@/models/Orders';
 import Products from '@/models/Products';
+import NotFound from '@/components/common/Erros/NotFound';
 // import { getOrdersWithShopperId } from '@/utils/order/getOrder';
 
 
@@ -16,19 +17,20 @@ export default async function OrdersPage() {
   await connect();
   const shopper = await Users.findOne({ email });
   const orders = await getOrdersWithShopperId(shopper.id);
-  orders.forEach((order, index) => console.log(`order: ${index}`, JSON.stringify(order), "\n\n"));
+  // orders.forEach((order, index) => console.log(`order: ${index}`, JSON.stringify(order), "\n\n"));
+
   return (
     <Box>
-      <Typography mt={4} variant={'h1'} pl={'20px'}>Orders</Typography>
+      <Typography mt={4} textAlign={'right'} variant={'h1'} pl={'20px'}>Orders</Typography>
       <Box sx={{
         my: 3,
         display: 'flex',
         flexDirection: 'column',
         gap: 3,
       }}>
-        {orders.map((order, index) => (
+        {orders.length > 0 ? orders.map((order, index) => (
           <ShopperOrderBox order={order} key={index} />
-        ))}
+        )) : <NotFound />}
       </Box>
     </Box>
   )

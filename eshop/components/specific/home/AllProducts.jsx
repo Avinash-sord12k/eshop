@@ -6,12 +6,21 @@ import { connect } from '@/database/connect';
 
 const AllProducts = async () => {
   await connect();
-  const basicProducts = await Products.find({ isFeatured: false, isOnSale: false });
-  const featuredProducts = await Products.find({ isFeatured: true });
-  const onSaleProducts = await Products.find({ isOnSale: true });
+
+  const basicProducts = await Products.find({ isFeatured: false, isOnSale: false })
+    .select('_id name price description category image');
+
+  const featuredProducts = await Products.find({ isFeatured: true })
+    .select('_id name price description category image').lean();
+
+  const onSaleProducts = await Products.find({ isOnSale: true })
+    .select('_id name price description category image').lean();
+
+  // console.log(basicProducts, featuredProducts, onSaleProducts);
 
   return (
     <>
+      {/* {basicProducts.map(item => <p>{JSON.stringify(item)}</p>)} */}
 
       {onSaleProducts.length > 0 &&
         <>
@@ -24,7 +33,7 @@ const AllProducts = async () => {
             justifyItems: 'stretch',
           }}>
             {onSaleProducts.map(product => (
-              <Card key={product._doc._id} product={product._doc} />
+              <Card key={product._id} product={product} />
             ))}
           </Box>
         </>}
@@ -40,7 +49,7 @@ const AllProducts = async () => {
             my: 2,
           }}>
             {featuredProducts.map(product => (
-              <Card key={product._doc._id} product={product._doc} />
+              <Card key={product._id} product={product} />
             ))}
           </Box>
         </>
@@ -57,7 +66,7 @@ const AllProducts = async () => {
             my: 2,
           }}>
             {basicProducts.map(product => (
-              <Card key={product._doc._id} product={product._doc} />
+              <Card key={product._id} product={product} />
             ))}
           </Box>
         </>

@@ -23,10 +23,10 @@ const HeaderItems = ({ props }) => {
 
   const handlePermit = (neededPermission) => {
 
-    if (Object.keys(userPermissions).length === 0) {
+    if (Object.keys(userPermissions).length === 0 || userPermissions.length === 0) {
       return false;
     }
-    if (Object.keys(neededPermission).length === 0) {
+    if (Object.keys(neededPermission).length === 0 || neededPermission.length === 0) {
       return true;
     }
     return neededPermission.every(needed => {

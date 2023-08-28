@@ -3,12 +3,16 @@ import { AppBar, Container, Toolbar } from '@mui/material';
 import { cookies } from 'next/headers';
 import { getUserfromJwt } from '@/utils/auth/auth';
 import HeaderItems from './HeaderItems';
+import Users from '@/models/Users'
 
 async function TopNav() {
   const token = cookies().get('token').value;
   const { username, email, role } = await getUserfromJwt(token);
+  const user = await Users.findOne({ email });
+  const image = user.image || null;
   const roleName = role.name.toLowerCase();
   const userPermissions = role.permissions;
+
   const pages = [
     {
       title: 'Wishlist',
@@ -34,18 +38,19 @@ async function TopNav() {
       title: 'Products',
       description: 'View and manage your shop for a personalized experience.',
       href: `${roleName}/products`,
-      permissions: [{ resource: "shop", action: ["read"] }],
+      permissions: [{ resource: "products", actions: ["read", "create", "update", "delete"] }],
     },
     {
       title: 'Profile',
       description: 'Manage and personalize your profile information.',
       href: `${roleName}/profile`,
-      permissions: [{ resource: "shop", action: ["read"] }],
+      permissions: [],
     },
   ];
   const props = {
     username,
     email,
+    image,
     roleName,
     userPermissions,
     pages,

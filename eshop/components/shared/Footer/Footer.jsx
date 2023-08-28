@@ -52,7 +52,7 @@ const Footer = () => {
             eSHOP
           </Typography>
         </Box>
-        <Divider flexItem dark color="#eee" />
+        <Divider flexItem color="#eee" />
         <Typography color="inherit" sx={{ flex: '1 1 0', whiteSpace: 'nowrap', justifySelf: 'flex-end', textAlign: 'right'}}>
           &copy; {currentYear} E Shop. All rights reserved.
         </Typography>

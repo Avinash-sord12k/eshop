@@ -11,14 +11,14 @@ import { getUserfromJwt } from '@/utils/auth/auth';
 
 export default async function OrdersPage() {
   const token = cookies().get('token').value;
-  const { username, email, role } = await getUserfromJwt(token);
+  const { email } = await getUserfromJwt(token);
   await connect();
   const user = await Users.findOne({ email });
   const orders = await getOrdersWithUserId(user.id);
 
   return (
     <Box>
-      <Typography mt={4} variant={'h1'} pl={'20px'}>Orders</Typography>
+      <Typography mt={4} textAlign={'right'} variant={'h1'} pl={'20px'}>Orders</Typography>
       <Box sx={{
         my: 3,
         display: 'flex',
@@ -51,10 +51,10 @@ async function getOrdersWithUserId(requestedShopperId) {
       })
       .exec();
 
-    // orders.map(order => {
-    //   order.totalAmount = order.products.reduce((acc, product) => acc + product.productId.price * product.quantity, 0);
-    //   return order
-    // })
+    orders.map(order => {
+      order.totalAmount = order.products.reduce((acc, product) => acc + product.productId.price * product.quantity, 0);
+      return order
+    })
 
     orders.sort((a, b) => {
       return new Date(b.orderDate) - new Date(a.orderDate);

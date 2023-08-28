@@ -119,9 +119,11 @@ const Signin = () => {
             color="primary"
             fullWidth
             startIcon={<GoogleIcon />}
-            onClick={() => {
-              // Handle continue with Google here
-            }}
+            onClick={() => dispatch(setAlert({
+              severity: 'warning',
+              message: 'Google Sign In is not yet implemented',
+              open: true,
+            }))}
           >
             Continue with Google
           </Button>

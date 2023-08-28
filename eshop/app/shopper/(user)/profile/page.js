@@ -6,6 +6,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 
+// not working icons below
 // import FacebookIcon from '@mui/icons-material/Facebook';
 // import InstagramIcon from '@mui/icons-material/Instagram';
 // import TwitterIcon from '@mui/icons-material/Twitter';
@@ -57,24 +58,6 @@ const ProfilePage = async () => {
   console.log(image);
   console.log("user: ", JSON.stringify(user), "\n\n");
 
-  // let username = 'John Doe';
-  // let email = '';
-  // let image = '';
-  // let businessType = 'Retail';
-  // let description = 'A leading retail company specializing in electronics and gadgets.';
-  // let products = ['Smartphones', 'Laptops', 'Accessories'];
-  // let services = 'Product repair, Warranty services';
-  // let address = '123 Main Street, Cityville';
-  // let startedYear = '2005';
-  // let contactEmail = 'info@example.com';
-  // let contactPhone = '+123-456-7890';
-  // let socialLinks = {
-  //   facebook: 'https://www.facebook.com/companyXYZ',
-  //   instagram: 'https://www.instagram.com/companyXYZ',
-  //   twitter: 'https://www.twitter.com/companyXYZ',
-  // };
-
-
   return (
     <Box>
       <Grid container spacing={2} sx={{ minHeight: 'calc(100vh - 64px)' }}>
@@ -99,26 +82,27 @@ const ProfilePage = async () => {
                 flexDirection: 'column',
                 alignItems: 'flex-start',
               }}>
-              <Typography variant="body1"><BusinessIcon sx={{ mr: 1, color: 'primary.main' }} /> {businessType}</Typography>
-              {/* <Typography variant="body2" sx={{ mt: 1 }}><DescriptionIcon sx={{ mr: 1 }} /> {description}</Typography> */}
-              <Typography variant="body2" sx={{ mt: 1 }}><WorkIcon sx={{ mr: 1, color: 'primary.main' }} /> {services}</Typography>
-              {/* Contact information */}
+              {businessType && <Typography variant="body1"><BusinessIcon sx={{ mr: 1, color: 'primary.main' }} /> {businessType}</Typography>}
+              {services && <Typography variant="body2" sx={{ mt: 1 }}><WorkIcon sx={{ mr: 1, color: 'primary.main' }} /> {services}</Typography>}
               <Divider sx={{ my: 2 }} />
-              <Typography variant="body1"><LocationOnIcon sx={{ mr: 1, color: 'primary.main' }} /> {address}</Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}><EmailIcon sx={{ mr: 1, color: 'primary.main' }} /> {contactEmail}</Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}><PhoneIcon sx={{ mr: 1, color: 'primary.main' }} /> {contactPhone}</Typography>
+              {address && <Typography variant="body1"><LocationOnIcon sx={{ mr: 1, color: 'primary.main' }} /> {address}</Typography>}
+              {contactEmail && <Typography variant="body2" sx={{ mt: 1 }}><EmailIcon sx={{ mr: 1, color: 'primary.main' }} /> {contactEmail}</Typography>}
+              {contactPhone && <Typography variant="body2" sx={{ mt: 1 }}><PhoneIcon sx={{ mr: 1, color: 'primary.main' }} /> {contactPhone}</Typography>}
               {/* Social media links */}
               <Divider sx={{ my: 2 }} />
               <Box sx={{ mt: 2 }}>
-                <Link href={socialLinks.facebook} target="_blank" rel="noopener noreferrer">
-                  Facebook
-                </Link>
-                <Link href={socialLinks.instagram} target="_blank" rel="noopener noreferrer">
-                  Instagram
-                </Link>
-                <Link href={socialLinks.twitter} target="_blank" rel="noopener noreferrer">
-                  Twitter
-                </Link>
+                {socialLinks.facebook &&
+                  <Link href={socialLinks.facebook || '#'} target="_blank" rel="noopener noreferrer">
+                    Facebook
+                  </Link>}
+                {socialLinks.instagram &&
+                  <Link href={socialLinks.instagram || "#"} target="_blank" rel="noopener noreferrer">
+                    Instagram
+                  </Link>}
+                {socialLinks.twitter &&
+                  <Link href={socialLinks.twitter || "#"} target="_blank" rel="noopener noreferrer">
+                    Twitter
+                  </Link>}
               </Box>
 
             </Box>

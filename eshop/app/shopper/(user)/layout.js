@@ -22,8 +22,8 @@ const UserPageLayout = async ({ children }) => {
     { title: 'Home', path: '/', icons: <HomeIcon /> },
     { title: 'Products', path: `/shopper/products`, icons: <StorefrontIcon /> },
     { title: 'Orders', path: `/shopper/orders`, icons: <LocalShippingIcon /> },
-    { title: 'Dashboard', path: `/shopper/dashboard`, icons: <DashboardIcon /> },
-    { title: 'Earning', path: `/shopper/earning`, icons: <PaidIcon /> },
+    // { title: 'Dashboard', path: `/shopper/dashboard`, icons: <DashboardIcon /> },
+    // { title: 'Earning', path: `/shopper/earning`, icons: <PaidIcon /> },
     { title: 'Wishlist', path: `/wishlist`, icons: <BookmarkIcon /> },
     { title: 'Profile', path: `/shopper/profile`, icons: <AccountCircleIcon /> },
   ];

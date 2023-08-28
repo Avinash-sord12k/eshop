@@ -1,5 +1,4 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -8,17 +7,12 @@ import Rating from '@mui/material/Rating';
 import CardOptions from './CardOptions';
 import { Chip } from '@mui/material';
 
-// const ProductCardContainer = styled(Card)(({ theme }) => ({
-//   borderRadius: theme.shape.borderRadius,
-// }));
-
-// const ProductImage = styled(CardMedia)(({ theme }) => ({
-//   height: 194,
-// }));
 
 export default function ProductCard({ product }) {
 
-  const { _id, name, price, descirption, category, image } = product;
+  let { _id, name, price, descirption, category, image } = product;
+  _id = _id.toString();
+  product = { _id, name, price, descirption, category, image };
 
   return (
       <Card sx={{borderRadius: 'small'}}>

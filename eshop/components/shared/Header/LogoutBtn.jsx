@@ -13,6 +13,7 @@ const LogoutBtn = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'credentials': 'include',
       },
       credentials: 'include',
     });
