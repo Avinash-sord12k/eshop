@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useSelector, useDispatch } from 'react-redux';
 import { addToWishlist, removeFromWishlist, clearWishlist } from '@/store/wishlistSlice/wishlistSlice';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const WishListItem = ({ item }) => {
   const theme = useTheme();

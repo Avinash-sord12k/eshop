@@ -20,7 +20,7 @@ const NotFound = () => {
     >
       <ErrorOutlineIcon sx={{ fontSize: 64, color: '#888' }} />
       <Typography variant="h6" align="center" mt={2} color="textSecondary">
-        Nothing's here
+        Nothing&apos;s here
       </Typography>
       <Link href="/">
         <Button variant="contained" color="primary" sx={{ marginTop: '16px' }}>

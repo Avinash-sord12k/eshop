@@ -23,7 +23,7 @@ const EmptyCart = () => {
         Your cart is empty
       </Typography>
       <Typography variant="body1" align="center" mt={2} color="textSecondary">
-        It looks like you haven't added any items to your cart yet.
+        It looks like you haven&apos;t added any items to your cart yet.
       </Typography>
       <Link href="/">
         <Button variant="contained" color="primary" sx={{ marginTop: '16px' }}>

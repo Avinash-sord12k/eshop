@@ -1,6 +1,5 @@
 "use client";
 import React from 'react'
-import { useTheme } from '@emotion/react'
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAlert, setDisabledLoading } from '@/store/uiStateSlice/uiStateSlice'
@@ -12,8 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
-const otpVerification = () => {
-  const theme = useTheme()
+const OtpVerification = () => {
   const dispatch = useDispatch()
   const router = useRouter()
   const { otp, email, password, showPassword } = useSelector((state) => state.signin)
@@ -48,7 +46,7 @@ const otpVerification = () => {
   return (
     <Box
       sx={{
-        border: `2px solid ${theme.palette.primary.dark}`,
+        border: `2px solid primary.dark}`,
         borderRadius: '10px',
         px: '2rem',
         py: '2rem',
@@ -60,7 +58,7 @@ const otpVerification = () => {
       <DisabledPageLoader />
       <CustomAlert />
       <Box sx={{ textAlign: 'center', my: 3 }}>
-        <Typography variant="h5" fontWeight="bold" sx={{ color: theme.palette.primary.main }}>
+        <Typography variant="h5" fontWeight="bold" sx={{ color: 'primary.main' }}>
           Enter OTP
         </Typography>
       </Box>
@@ -104,4 +102,4 @@ const otpVerification = () => {
   )
 }
 
-export default otpVerification
+export default OtpVerification
