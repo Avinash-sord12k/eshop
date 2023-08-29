@@ -1,18 +1,28 @@
 import React from 'react';
 import { Grid, Paper, Avatar, Typography, Box, Badge, Container } from '@mui/material';
-import BusinessIcon from '@mui/icons-material/Business';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
-import EditIcon from '@mui/icons-material/Edit';
-import { stringToColor } from '@/utils/extras/extras';
-import EditProfileModal from '@/components/specific/userProfile/EditProfileModal';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { cookies } from 'next/headers';
-import { getUserfromJwt } from '@/utils/auth/auth';
 import Users from '@/models/Users';
 import { connect } from '@/database/connect';
+import mongoose from 'mongoose';
+import { stringToColor } from '@/utils/extras/extras';
 
-const ProfilePage = async () => {
+const UserById = async ({ params }) => {
+  await connect();
+  const userId = new mongoose.Types.ObjectId(params.id);
+  const {
+    username,
+    email,
+    role,
+    image,
+    address,
+    contactEmail,
+    contactPhone,
+    description } = await Users.findById(userId)
+      .select('username email role image address contactEmail contactPhone description')
+      .lean();
+
   const stringAvatar = (name) => {
     return {
       sx: {
@@ -20,28 +30,16 @@ const ProfilePage = async () => {
       },
       children: `${name.trim()[0].toUpperCase()}`,
     };
-  }
-
-  const token = cookies().get('token').value;
-  let { email } = await getUserfromJwt(token);
-
-  await connect();
-  let { username, role, image, address, contactEmail, contactPhone, description } = await Users.findOne({ email })
-    .select('username email role image address contactEmail contactPhone description')
-    .lean();
-
-  console.log({ username, role, image, address, contactEmail, contactPhone, description });
-
+  };
   return (
     <Container sx={{
       margin: '30px 0px 30px 0',
       maxWidth: '800px',
       mx: 'auto',
     }}>
-      <Box
-        sx={{
-          minHeight: 'calc(100vh - 64px)'
-        }}>
+      <Box sx={{
+        minHeight: 'calc(100vh - 64px)'
+      }}>
         <Box mb={2}>
           <Paper elevation={0} sx={{
             padding: 6,
@@ -117,7 +115,6 @@ const ProfilePage = async () => {
             alignItems: 'flex-start',
             flexDirection: 'row',
             flexWrap: 'wrap',
-            gap: '20px',
             justifyContent: 'space-between',
           }}>
             <Box sx={{
@@ -141,13 +138,18 @@ const ProfilePage = async () => {
             <Box sx={{
               flex: '1 0 300px',
             }}>
-              <EditProfileModal />
+              <Typography variant="body1" sx={{ mt: 2, mb: 2 }}>
+                Browse other products by {username}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                Coming soon...
+              </Typography>
             </Box>
           </Paper>
         </Box>
       </Box>
     </Container>
   );
-};
+}
 
-export default ProfilePage;
+export default UserById

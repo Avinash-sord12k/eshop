@@ -10,11 +10,13 @@ import { setOtp, setPassword, setShowPassword } from '@/store/signinSlice/signin
 import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { useTheme } from '@mui/material/styles';
 
 const OtpVerification = () => {
-  const dispatch = useDispatch()
-  const router = useRouter()
-  const { otp, email, password, showPassword } = useSelector((state) => state.signin)
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const router = useRouter();
+  const { otp, email, password, showPassword } = useSelector((state) => state.signin);
 
   const VerifyOtp = async () => {
     try {
@@ -46,7 +48,7 @@ const OtpVerification = () => {
   return (
     <Box
       sx={{
-        border: `2px solid primary.dark}`,
+        border: `2px solid ${theme.palette.primary.main}`,
         borderRadius: '10px',
         px: '2rem',
         py: '2rem',

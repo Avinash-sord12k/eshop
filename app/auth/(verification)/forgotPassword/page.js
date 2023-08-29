@@ -4,6 +4,7 @@ import { useTheme } from '@emotion/react';
 import { Box, Button, Container, TextField, Typography, IconButton, Link, Divider, Chip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAlert, setDisabledLoading } from '@/store/uiStateSlice/uiStateSlice';
+import { setEmail } from '@/store/signinSlice/signinSlice';
 import { useRouter } from 'next/navigation';
 import DisabledPageLoader from '@/components/common/Progress/DisabledPageLoader';
 import CustomAlert from '@/components/common/Alert';

@@ -32,16 +32,16 @@ const userSchema = new mongoose.Schema({
   
   // New shopper-specific fields
   image: String,
-  businessType: String,
+  address: String,
+  contactEmail: String,
+  contactPhone: String,
   description: String,
+  businessType: String,
   products: [String],
   services: String,
   companyGrowth: String,
   stockExchange: String,
-  address: String,
   startedYear: String,
-  contactEmail: String,
-  contactPhone: String,
   socialLinks: {
     facebook: String,
     instagram: String,

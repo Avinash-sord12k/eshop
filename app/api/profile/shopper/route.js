@@ -11,7 +11,6 @@ export const PUT = async (request) => {
     console.log({ ...items });
 
     const { email } = await getUserfromJwt(request.cookies.get('token').value);
-
     const shopper = await Users.findOne({ email });
 
     if (!shopper) {

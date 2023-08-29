@@ -363,7 +363,7 @@ const ManageProducts = () => {
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={tabPosition} onChange={handleTabPositionChange} aria-label="basic tabs example">
                 <Tab label="Upload One" {...a11yProps(0)} />
-                <Tab label="UPload Many" {...a11yProps(1)} />
+                <Tab label="Upload Bulk" {...a11yProps(1)} />
               </Tabs>
             </Box>
             <CustomTabPanel value={tabPosition} index={0}>

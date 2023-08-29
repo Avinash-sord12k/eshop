@@ -1,10 +1,12 @@
 import React from 'react';
-import { Box, Grid, Typography, Rating, Container } from '@mui/material';
+import { Box, Grid, Typography, Rating, Container, CircularProgress } from '@mui/material';
 import { connect } from '@/database/connect';
 import Products from '@/models/Products';
 import ProductCard from '@/components/common/ProductCard/ProductCard'
 import ProductOptions from '@/components/specific/shop/ProductPage/ProductOptions';
 import Image from 'next/image';
+import SameCategoryProducts from '@/components/specific/shop/ProductPage/SameCategoryProducts';
+import SellerInfo from '@/components/specific/shop/ProductPage/SellerInfo';
 
 
 const ProductPage = async ({ params }) => {
@@ -15,21 +17,7 @@ const ProductPage = async ({ params }) => {
     .lean();
 
   const { category } = product;
-  const sameCategoryProducts = await Products.find({ category: category })
-    .select('_id name price description category image')
-    .limit(4)
-    .lean();
-
-  const convertIdToString = products => {
-    return products.map(product => {
-      product._id = product._id.toString(); // Convert _id to string
-      return product;
-    });
-  };
-
   product._id = product._id.toString();
-  convertIdToString(sameCategoryProducts);
-
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -53,30 +41,33 @@ const ProductPage = async ({ params }) => {
             <Typography variant="h4" color="primary" sx={{ mt: 1 }}>
               ₹{product.price}
             </Typography>
-            {product.description ? <Typography variant="body1" sx={{ mt: 2 }}>
+            {product.description ? <Typography variant="body1" color='textSecondary' sx={{ mt: 2 }}>
               {product.description.slice(0, 300) + '...'}
             </Typography> : null}
+            <Box 
+              sx={{
+                display: 'inline',
+                py: 2,
+                borderRadius: '4px',
+                color: 'primary.main',
+                my: 4,
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                }
+              }}>
+              <React.Suspense fallback={<CircularProgress />}>
+                <SellerInfo shopperId={product.shopperId} />
+              </React.Suspense>
+            </Box>
             <ProductOptions product={product} />
           </Box>
         </Grid>
       </Grid>
-      {sameCategoryProducts.length > 0 &&
-        <Box my={4}>
-          <Typography variant="h6" fontWeight={'bold'} mt={10}>
-            More from {category[0].toUpperCase() + category.slice(1)}
-          </Typography>
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-            gridGap: '1rem',
-            my: 2,
-            justifyItems: 'stretch',
-          }}>
-            {sameCategoryProducts.map(product => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </Box>
-        </Box>}
+      <React.Suspense fallback={<CircularProgress />}>
+        <SameCategoryProducts category={category} />
+      </React.Suspense>
     </Container>
   );
 };
