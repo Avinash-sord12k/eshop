@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Orders from "@/models/Orders";
 import Users from "@/models/Users";
 import { connect } from '@/database/connect';
+import Products from "@/models/Products";
+import mongoose from "mongoose";
 
 export const POST = async (req) => {
   try {
@@ -12,6 +14,23 @@ export const POST = async (req) => {
         status: 400,
         body: { message: `${!email && "email"} ${!products && "products"} ${!totalAmount && "totalAmount"} is not given.`, success: false, }
       });
+
+    // checking for adequate stock
+    for (let i = 0; i < products.length; i++) {
+      const product = await Products.findOne({ _id: products[i].productId });
+      if (product.stock < products[i].quantity) {
+        return NextResponse.json({
+          status: 400,
+          body: {
+            message: `Product ${product.name} is out of stock. Only ${product.stock} left.`,
+            success: false,
+          }
+        });
+      }
+      // updating stock
+      product.stock -= products[i].quantity;
+      await product.save();
+    }
 
     const user = await Users.findOne({ email });
     const userId = user.id;
