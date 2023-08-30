@@ -11,7 +11,7 @@ const AllProducts = async () => {
   try {
     await connect();
     basicProducts = await Products.find({ isFeatured: false, isOnSale: false })
-      .select('_id name price description category image');
+      .select('_id name price description category image').lean();
 
     featuredProducts = await Products.find({ isFeatured: true })
       .select('_id name price description category image').lean();
