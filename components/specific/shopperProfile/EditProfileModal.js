@@ -61,7 +61,9 @@ const EditProfileModal = () => {
 
   return (
     <>
-      <Button variant={'contained'} mt="20px" onClick={handleOpen}>
+      <Button variant={'contained'} sx={{
+        marginTop: 6,
+      }} onClick={handleOpen}>
         <EditIcon sx={{ mr: 1 }} />
         Edit Profile
       </Button> 

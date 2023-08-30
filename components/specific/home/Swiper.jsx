@@ -17,20 +17,21 @@ export default function HeroSwiper() {
   const slideData = [
     {
       img: '/illustrations/Ecommerce web page-amico.svg',
-      title: 'Ecommerce web page',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      title: 'Ecommerce Web App',
+      description: 'Craft seamless online shopping experiences with our Ecommerce web application. Elevate user engagement and boost sales with user-friendly interfaces and secure transactions.',
     },
     {
       img: '/illustrations/Data analysis-bro.svg',
-      title: 'Online shopping',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      title: 'Online Shopping Solutions',
+      description: 'Unlock the potential of your business with our Online Shopping Solutions. Harness data-driven insights for enhanced customer experiences and optimized sales strategies.',
     },
     {
       img: '/illustrations/Data analysis-pana.svg',
-      title: 'Data analysis',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      title: 'Advanced Data Analysis',
+      description: 'Empower your decision-making with Advanced Data Analysis. Uncover actionable insights from complex data sets and drive strategic growth for your business.',
     }
   ];
+
   return (
     <Swiper
       modules={[Navigation, Pagination]}
@@ -73,6 +74,8 @@ export default function HeroSwiper() {
               position: 'relative',
               alignSelf: 'flex-start',
               marginTop: '20px',
+              transition: 'all 0.3s ease-in-out',
+              padding: '20px',
               [theme.breakpoints.down('md')]: {
                 position: 'absolute',
                 bottom: '0',
@@ -81,6 +84,10 @@ export default function HeroSwiper() {
                 textAlign: 'center',
                 width: '80%',
                 background: '#ffffffc7',
+                borderRadius: '10px',
+                '&:hover': {
+                  opacity: '0.1',
+                }
               },
             }}>
               <Typography variant='h2'
@@ -91,7 +98,7 @@ export default function HeroSwiper() {
                   color: theme.palette.primary.main,
                 }}
               >{slide.title}</Typography>
-              <p>{slide.description}</p>
+              <Typography variant='subtitle1' >{slide.description}</Typography>
             </Box>
           </Box>
 

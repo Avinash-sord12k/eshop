@@ -184,7 +184,6 @@ const ManageProducts = () => {
         headers: { 'withCredentials': true },
         body: formData,
       }
-      console.log(data);
       const response = await fetch(`http://localhost:3000/api/products/json`, requestOptions);
 
       const responseData = await response.json();
@@ -232,7 +231,7 @@ const ManageProducts = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box>
+        <Fade in={addProductModal !== null}>
           <Box sx={{
               position: 'absolute',
               top: '10%',
@@ -321,7 +320,7 @@ const ManageProducts = () => {
             </Button>
           </Box>
 
-        </Box>
+        </Fade>
       </Modal>
 
       <Modal
