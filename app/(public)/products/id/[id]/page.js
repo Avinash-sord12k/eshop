@@ -2,9 +2,7 @@ import React from 'react';
 import { Box, Grid, Typography, Rating, Container, CircularProgress } from '@mui/material';
 import { connect } from '@/database/connect';
 import Products from '@/models/Products';
-import ProductCard from '@/components/common/ProductCard/ProductCard'
 import ProductOptions from '@/components/specific/shop/ProductPage/ProductOptions';
-import Image from 'next/image';
 import SameCategoryProducts from '@/components/specific/shop/ProductPage/SameCategoryProducts';
 import SellerInfo from '@/components/specific/shop/ProductPage/SellerInfo';
 
@@ -27,8 +25,6 @@ const ProductPage = async ({ params }) => {
             {/* // not using next/image because of hostname issue. */}
             <img src={product.image} alt={product.name} style={{
               width: '300px',
-              // height: '300px',
-              // objectFit: 'cover',
             }} />
           </Box>
         </Grid>
@@ -44,7 +40,7 @@ const ProductPage = async ({ params }) => {
             {product.description ? <Typography variant="body1" color='textSecondary' sx={{ mt: 2 }}>
               {product.description.slice(0, 300) + '...'}
             </Typography> : null}
-            <Box 
+            <Box
               sx={{
                 display: 'inline',
                 py: 2,
@@ -65,9 +61,9 @@ const ProductPage = async ({ params }) => {
           </Box>
         </Grid>
       </Grid>
-      <React.Suspense fallback={<CircularProgress />}>
+      {category ? <React.Suspense fallback={<CircularProgress />}>
         <SameCategoryProducts category={category} />
-      </React.Suspense>
+      </React.Suspense> : null}
     </Container>
   );
 };

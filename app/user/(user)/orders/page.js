@@ -35,11 +35,11 @@ export default async function OrdersPage() {
 
 
 
-async function getOrdersWithUserId(requestedShopperId) {
+async function getOrdersWithUserId(requestedUserId) {
   try {
     await connect();
     const orders = await Orders.find({
-      'userId': requestedShopperId
+      'userId': requestedUserId
     })
       .populate({
         path: 'products.productId',

@@ -44,8 +44,8 @@ const Signin = () => {
         const { name, permissions } = role;
         dispatch(setLogin({ username, role: role.name, image, permissions, email, userId }));
         e.target.blur();
+        // dispatch(setDisabledLoading(false));
         router.push('/');
-        dispatch(setDisabledLoading(false));
       }
 
       else if (!data.body.success) {

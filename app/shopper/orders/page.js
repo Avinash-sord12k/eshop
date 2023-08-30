@@ -51,9 +51,11 @@ export async function getOrdersWithShopperId(requestedShopperId) {
         path: 'products.productId',
         select: 'name price image'
       })
+      .populate({
+        path: 'userId',
+        select: '_id username email address contactPhone'
+      })
       .exec();
-
-    orders.forEach(order => console.log("order: ", JSON.stringify(order.product), "\n\n"));
     orders = orders.map(order => {
       order.products = order.products.filter(product => product.shopperId == requestedShopperId);
       order.totalAmount = order.products.reduce((acc, product) => acc + (product.productId.price) * product.quantity, 0);
