@@ -231,29 +231,29 @@ const ManageProducts = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Fade in={addProductModal !== null}>
-          <Box sx={{
-              position: 'absolute',
-              top: '10%',
-              left: '50%',
-              rounded: 'lg',
-              transform: 'translate(-50%, 0%)',
-              width: 400,
-              bgcolor: 'background.paper',
-              boxShadow: 24,
-              p: 2,
-              borderRadius: '10px',
-              maxHeight: "80vh",
-              overflowY: 'auto',
-              '&::-webkit-scrollbar': {
-                width: '0.4em'
-              },
-              '&::-webkit-scrollbar-track': {
-                backgroundColor: 'transparent'
-              },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: 'primary.main'
-              }
+        <Fade in={openModal !== null}>
+          <Box id="add-product-form" sx={{
+            position: 'absolute',
+            top: '10%',
+            left: '50%',
+            rounded: 'lg',
+            transform: 'translate(-50%, 0%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: '10px',
+            maxHeight: "80vh",
+            overflowY: 'auto',
+            '&::-webkit-scrollbar': {
+              width: '0.4em'
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: 'transparent'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: 'primary.main'
+            }
           }}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Edit Product
@@ -311,7 +311,23 @@ const ManageProducts = () => {
               value={editedProduct.description || ''}
               onChange={handlUpdateProductInputChange}
               margin="normal"
+              sx={{
+                'textarea::-webkit-scrollbar': {
+                  width: '0em !important',
+                },
+                'textarea:focus::-webkit-scrollbar': {
+                  width: '0.2em !important',
+                },
+                'textarea::-webkit-scrollbar-track': {
+                  backgroundColor: 'transparent !important',
+                },
+                'textarea::-webkit-scrollbar-thumb': {
+                  backgroundColor: '#673ab7 !important', // Use theme variables if available
+                },
+              }}
             />
+
+
             <Button variant="contained"
               startIcon={updateLoading ? <CircularProgress color="inherit" sx={{
                 transform: 'scale(0.5)',
