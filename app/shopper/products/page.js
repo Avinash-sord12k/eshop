@@ -193,12 +193,14 @@ const ManageProducts = () => {
       if (responseData.body.success) {
         dispatch(setAlert({ message: responseData.body.message, severity: 'success', open: true }));
         getProducts();
+        setAddProductModal(null);
         return;
       }
       dispatch(setAlert({ message: responseData.body.message, severity: 'warning', open: true }));
     } catch (error) {
       dispatch(setAlert({ message: error.message, severity: 'error', open: true }));
       dispatch(setDisabledLoading(false));
+      setAddProductModal(null);
       console.log(error);
     }
   }
@@ -327,6 +329,19 @@ const ManageProducts = () => {
               }}
             />
 
+
+            <Box my={3}>
+              <Button size='small' variant={editedProduct.isFeatured ? 'contained' : 'text'} sx={{ mr: 2 }}
+                startIcon={editedProduct.isFeatured && <CheckIcon />}
+                onClick={() => setEditedProduct({ ...editedProduct, isFeatured: !editedProduct.isFeatured })}>
+                Featured
+              </Button>
+              <Button size='small' variant={editedProduct.isOnSale ? 'contained' : 'text'} sx={{ mr: 2 }}
+                startIcon={editedProduct.isOnSale && <CheckIcon />}
+                onClick={() => setEditedProduct({ ...editedProduct, isOnSale: !editedProduct.isOnSale })}>
+                On Sale
+              </Button>
+            </Box>
 
             <Button variant="contained"
               startIcon={updateLoading ? <CircularProgress color="inherit" sx={{

@@ -10,10 +10,10 @@ import { getUserfromJwt } from '@/utils/auth/auth';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const UserPageLayout = async ({ children }) => {
-  const cookieStore = cookies();
-  const token = cookieStore.get('token').value;
-  const { email } = await getUserfromJwt(token);
-  console.log("email: ", email);
+  // const cookieStore = cookies();
+  // const token = cookieStore.get('token').value;
+  // const { email } = await getUserfromJwt(token);
+  // console.log("email: ", email);
 
   const navLinks = [
     { title: 'Home', path: '/', icons: <HomeIcon /> },

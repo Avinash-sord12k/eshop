@@ -3,26 +3,26 @@ import { Box, Typography } from '@mui/material'
 import Card from '@/components/common/ProductCard/ProductCard'
 import Products from "@/models/Products";
 import { connect } from '@/database/connect';
+import LoadOnScroll from './LoadOnScroll.jsx/LoadOnScroll';
 
 const AllProducts = async () => {
-  let basicProducts = [];
-  let featuredProducts = [];
-  let onSaleProducts = [];
-  try {
-    await connect();
-    basicProducts = await Products.find({ isFeatured: false, isOnSale: false })
-      .select('_id name price description category image').lean();
+  await connect();
+  let basicProducts = await Products.find({ isFeatured: false, isOnSale: false })
+    .select('_id name price category image')
+    .sort({ createdAt: -1 })
+    .skip(0)
+    .limit(4)
+    .lean();
 
-    featuredProducts = await Products.find({ isFeatured: true })
-      .select('_id name price description category image').lean();
+  let featuredProducts = await Products.find({ isFeatured: true })
+    .select('_id name price description category image').lean();
 
-    onSaleProducts = await Products.find({ isOnSale: true })
-      .select('_id name price description category image').lean();
-  } catch (error) {
-    throw new Error(error.message);
-  }
+  let onSaleProducts = await Products.find({ isOnSale: true })
+    .select('_id name price description category image').lean();
 
-  // console.log(basicProducts, featuredProducts, onSaleProducts);
+  basicProducts = basicProducts.map(item => { item._id = item._id.toString(); return item; });
+  featuredProducts = featuredProducts.map(item => { item._id = item._id.toString(); return item; });
+  onSaleProducts = onSaleProducts.map(item => { item._id = item._id.toString(); return item; });
 
   return (
     <>
@@ -61,22 +61,7 @@ const AllProducts = async () => {
         </>
       }
 
-      {
-        basicProducts.length > 0 &&
-        <>
-          <Typography variant="h6" fontWeight={'bold'} mt={10}> All Products </Typography>
-          <Box sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-            gridGap: '1rem',
-            my: 2,
-          }}>
-            {basicProducts.map(product => (
-              <Card key={product._id} product={product} />
-            ))}
-          </Box>
-        </>
-      }
+      {basicProducts.length > 0 && <LoadOnScroll initialBasicProducts={basicProducts} />}
 
 
     </>

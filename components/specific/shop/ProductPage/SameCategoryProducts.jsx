@@ -5,10 +5,13 @@ import Products from 'models/Products';
 
 
 const SameCategoryProducts = async ({ category }) => {
-  const sameCategoryProducts = await Products.find({ category })
+  const regex = new RegExp(category, 'i');
+
+  let sameCategoryProducts = await Products.find({ category: { $regex: regex } })
     .select('_id name price description category image')
     .limit(4)
     .lean();
+
 
   const convertIdToString = products => {
     return products.map(product => {
@@ -17,7 +20,7 @@ const SameCategoryProducts = async ({ category }) => {
     });
   };
 
-  convertIdToString(sameCategoryProducts);
+  sameCategoryProducts = convertIdToString(sameCategoryProducts);
 
   return (
     <>

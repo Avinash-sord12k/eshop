@@ -33,7 +33,7 @@ const IconWithText = ({ text, icon }) => {
 export default function ShopperOrderBox({ order }) {
   const { _id, totalAmount, status, products, orderDate } = order;
 
-  console.log('order: ', order);
+  // console.log('order: ', order);
   return (
     <Paper elevation={3} style={{ padding: '20px' }}>
       <Box sx={{

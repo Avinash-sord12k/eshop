@@ -20,7 +20,8 @@ const LogoutBtn = () => {
     const data = await response.json();
     if (data.body.success) {
       dispatch(setLogout());  
-      router.push('/auth/signin');
+      // router.push('/auth/signin');
+      window.location.href = '/';
     }
   };
 

@@ -1,32 +1,28 @@
 "use client";
 import { Badge, IconButton, Tooltip, Avatar, Menu, MenuItem, Typography, Box, Button } from '@mui/material';
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux';
 import { stringToColor } from '@/utils/extras/extras';
-import { useRouter } from 'next/navigation';
 import LogoutBtn from './LogoutBtn';
 import Link from 'next/link';
 
 
 const UserAvatar = ({ props }) => {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const { username, roleName: role, image } = props;
-  // const { isAuth, image } = useSelector(state => state.auth);
+  const { username, roleName: role, image, isAuth } = props;
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [client, setClient] = React.useState(false);
   const settings = [
     {
       title: 'Profile',
       description: 'Manage and personalize your profile information.',
-      href: `/${role}/profile`,
+      href: `${process.env.NEXT_PUBLIC_CURRENT_DOMAIN}/${role}/profile`,
       permissions: [],
+      authReq: true,
     },
     {
       title: 'Wishlist',
       description: 'Manage your wishlist.',
-      href: `/${role}/wishlist`,
+      href: `${process.env.NEXT_PUBLIC_CURRENT_DOMAIN}/${role}/wishlist`,
       permissions: [],
+      authReq: true,
     },
   ];
 
@@ -47,12 +43,9 @@ const UserAvatar = ({ props }) => {
     };
   }
 
-  React.useEffect(() => {
-    setClient(true);
-  }, []);
-
   return (
     <Box>
+      {isAuth ? 
       <>
         <Tooltip title="Open settings">
           <Badge color={'secondary'}
@@ -99,7 +92,7 @@ const UserAvatar = ({ props }) => {
           <LogoutBtn />
         </Menu>
       </>
-      {/* : <Box sx={{
+        : <Box sx={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
@@ -119,7 +112,7 @@ const UserAvatar = ({ props }) => {
           >
             Register
           </Button>
-        </Box>)} */}
+        </Box>}
     </Box>
   )
 }
