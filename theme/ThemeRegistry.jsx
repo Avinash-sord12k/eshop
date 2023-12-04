@@ -100,7 +100,7 @@ const darkTheme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Poppins, sans-serif',
+    fontFamily: 'Sofia Sans Semi Condensed, sans-serif',
     h1: {
       fontSize: '2.5rem',
       fontWeight: 700,
@@ -153,8 +153,8 @@ export default function ThemeRegistry({ children }) {
     <NextAppDirEmotionCacheProvider options={{ key: 'mui' }}>
       <ThemeProvider theme={themeWithResponsiveFont}>
         <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </NextAppDirEmotionCacheProvider>
-  );
+            {children}
+          </ThemeProvider>
+        </NextAppDirEmotionCacheProvider>
+        );
 }
