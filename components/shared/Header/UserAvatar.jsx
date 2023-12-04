@@ -22,16 +22,16 @@ const UserAvatar = ({ props }) => {
       href: `/${role}/profile`,
       permissions: [],
     },
-    {
-      title: 'Dashboard',
-      description: 'Access your administrative dashboard.',
-      href: `/${role}/dashboard`,
-      permissions: [],
-    },
+    // {
+    //   title: 'Dashboard',
+    //   description: 'Access your administrative dashboard.',
+    //   href: `/${role}/dashboard`,
+    //   permissions: [],
+    // },
     {
       title: 'Wishlist',
       description: 'Manage your wishlist.',
-      href: `/${role}/wishlist`,
+      href: `/wishlist`,
       permissions: [],
     },
   ];

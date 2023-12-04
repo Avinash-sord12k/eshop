@@ -14,13 +14,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <ReduxProvider>
-        <ThemeRegistry>
-          <body >
+      <body >
+        <ReduxProvider>
+          <ThemeRegistry>
             {children}
-          </body>
-        </ThemeRegistry>
-      </ReduxProvider>
+          </ThemeRegistry>
+        </ReduxProvider>
+      </body>
     </html>
   )
 }
