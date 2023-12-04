@@ -185,7 +185,7 @@ const ManageProducts = () => {
         body: formData,
       }
       console.log(data);
-      const response = await fetch(`http://localhost:3000/api/products/json`, requestOptions);
+      const response = await fetch(`api/products/json`, requestOptions);
 
       const responseData = await response.json();
       console.log(responseData);
