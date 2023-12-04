@@ -56,8 +56,16 @@ const ManageProducts = () => {
   const handleAddProductModalOpen = () => setAddProductModal(true);
   const [notFound, setNotFound] = React.useState(false);
   const [newProduct, setNewProduct] = React.useState({
-    name: '', price: '', stock: '', image: '', description: '', isFeatured: false, isOnSale: false, category: ''
+    name: '',
+    price: '',
+    stock: '',
+    image: '',
+    description: '',
+    isFeatured: false,
+    isOnSale: false,
+    category: ''
   });
+
   const dispatch = useDispatch();
 
   const handlUpdateProductInputChange = (e) => {
@@ -136,7 +144,7 @@ const ManageProducts = () => {
   }
   const handleSearch = (searchQuery, filterOption) => {
     console.log("searched: ", searchQuery, filterOption);
-    switch (filterOption) {
+    switch (filterOption.trim().toLowerCase()) {
       case 'all':
         return setProductsToShow(products);
       case 'name':
@@ -149,7 +157,10 @@ const ManageProducts = () => {
         const filteredProductsByPrice2 = products.filter(product => (!isNaN(parseInt(searchQuery)) && (product.price >= searchQuery)));
         return setProductsToShow(filteredProductsByPrice2);
       case 'category':
-        const filteredProducts = products.filter(product => product.category.includes(searchQuery));
+        const filteredProducts = products.filter(product =>
+          product.category
+            ? product.category.toLowerCase().includes(searchQuery.toLowerCase())
+            : 'none'.includes(searchQuery.toLowerCase()));
         return setProductsToShow(filteredProducts);
       default:
         return setProductsToShow(products);
@@ -222,7 +233,7 @@ const ManageProducts = () => {
           filterOption,
         }} />
       </Box>
-      <Box sx={{ mt: '40px', mr: '40px' }} >
+      <Box sx={{ mt: '40px' }} >
         {notFound && <NotFound />}
         <ProductsView products={productsToShow} getProducts={getProducts} openModal={handleOpen} />
       </Box>

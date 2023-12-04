@@ -10,13 +10,13 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Chip } from '@mui/material';
+import { Box, Chip, Divider } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { setAlert } from '@/store/uiStateSlice/uiStateSlice';
 
 
 const ProductCardContainer = styled(Card)(({ theme }) => ({
-  maxWidth: 345,
+  // maxWidth: 345,
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[4], // Add a subtle shadow
   display: 'flex',
@@ -25,7 +25,7 @@ const ProductCardContainer = styled(Card)(({ theme }) => ({
 
 const ProductImage = styled(CardMedia)(({ theme }) => ({
   height: 194,
-  objectFit: 'contain', // Ensure the image fits well in the container
+  objectFit: 'contain', 
 }));
 
 export default function ProductInfoCard({ options, index }) {
@@ -70,11 +70,13 @@ export default function ProductInfoCard({ options, index }) {
             alt="Product"
           />
         )}
+        <Divider />
         <CardContent>
           <Typography variant="h6" gutterBottom>
             {name.slice(0, 20)}...
           </Typography>
-          {category && <Chip label={category} color="secondary" size="small" />}
+          {category ? <Chip label={category} color="secondary" size="small" /> :
+            <Chip label="No Category" color="error" size="small" />}
           {description &&
             <Typography variant="body2" color="text.secondary" mt={1}>
               {description.slice(0, 30)}...
@@ -90,6 +92,7 @@ export default function ProductInfoCard({ options, index }) {
               </Typography>}
           </Box>
         </CardContent>
+        <Divider />
         <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <IconButton aria-label="delete" onClick={() => handleDelete(_id)}>
             <DeleteIcon />
