@@ -12,8 +12,8 @@ import NotFound from '@/components/common/Erros/NotFound';
 
 
 export default async function OrdersPage() {
+  const token = cookies().get('token').value;
   try {
-    const token = cookies().get('token').value;
     const { email } = await getUserfromJwt(token);
     await connect();
     const shopper = await Users.findOne({ email });

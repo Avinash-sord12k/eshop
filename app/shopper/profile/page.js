@@ -11,9 +11,9 @@ import PhoneIcon from '@mui/icons-material/Phone';
 // import InstagramIcon from '@mui/icons-material/Instagram';
 // import TwitterIcon from '@mui/icons-material/Twitter';
 
-import { BsFacebook } from 'react-icons/bs';
-import { BsInstagram } from 'react-icons/bs';
-import { BsTwitter } from 'react-icons/bs';
+// import { BsFacebook } from 'react-icons/bs';
+// import { BsInstagram } from 'react-icons/bs';
+// import { BsTwitter } from 'react-icons/bs';
 
 import { stringToColor } from '@/utils/extras/extras';
 import Link from 'next/link';
@@ -95,15 +95,15 @@ const ProfilePage = async () => {
                 }}>
                   {socialLinks.facebook &&
                     <Link href={socialLinks.facebook || '#'} target="_blank" rel="noopener noreferrer">
-                      <BsFacebook style={{ color: '#673ab7', fontSize: '1.2rem' }} />
+                      {/* <BsFacebook style={{ color: '#673ab7', fontSize: '1.2rem' }} /> */}
                     </Link>}
                   {socialLinks.instagram &&
                     <Link href={socialLinks.instagram || "#"} target="_blank" rel="noopener noreferrer">
-                      <BsInstagram style={{ color: '#673ab7', fontSize: '1.2rem' }} />
+                      {/* <BsInstagram style={{ color: '#673ab7', fontSize: '1.2rem' }} /> */}
                     </Link>}
                   {socialLinks.twitter &&
                     <Link href={socialLinks.twitter || "#"} target="_blank" rel="noopener noreferrer">
-                      <BsTwitter style={{ color: '#673ab7', fontSize: '1.2rem' }} />
+                      {/* <BsTwitter style={{ color: '#673ab7', fontSize: '1.2rem' }} /> */}
                     </Link>}
                 </Box>
               </Divider>
