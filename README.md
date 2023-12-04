@@ -30,7 +30,7 @@ The e-shopping web application is a versatile platform that serves multiple user
 
 - **Next.js:** Leverages server-side rendering for better performance and SEO optimization.
 - **Material UI:** Offers a wide array of pre-built components for a polished UI/UX.
-- **Database:** Likely uses MongoDB, MySQL, or Firebase for storing product information, user data, and transactions.
+- **Database:** Uses MongoDB for storing product information, user data, and transactions.
 
 ## Screenshots
 
@@ -45,6 +45,19 @@ The e-shopping web application is a versatile platform that serves multiple user
 
 ### Manage Products Page
 ![Manage Products Page](Screenshots/ProductManagement.png)
+
+### Awesome Performance and SEO
+![Awesome Performance and SEO](Screenshots/AwesomePerformance.png)
+
+## Test Credentials
+
+- **Buyer:**
+  - Username: buyer@test.com
+  - Password: testbuyer123
+
+- **Shopkeeper:**
+  - Username: shopkeeper@test.com
+  - Password: testshopkeeper123
 
 ## Running Locally
 
