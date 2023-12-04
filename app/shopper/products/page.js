@@ -56,8 +56,16 @@ const ManageProducts = () => {
   const handleAddProductModalOpen = () => setAddProductModal(true);
   const [notFound, setNotFound] = React.useState(false);
   const [newProduct, setNewProduct] = React.useState({
-    name: '', price: '', stock: '', image: '', description: '', isFeatured: false, isOnSale: false, category: ''
+    name: '',
+    price: '',
+    stock: '',
+    image: '',
+    description: '',
+    isFeatured: false,
+    isOnSale: false,
+    category: ''
   });
+
   const dispatch = useDispatch();
 
   const handlUpdateProductInputChange = (e) => {
@@ -136,7 +144,7 @@ const ManageProducts = () => {
   }
   const handleSearch = (searchQuery, filterOption) => {
     console.log("searched: ", searchQuery, filterOption);
-    switch (filterOption) {
+    switch (filterOption.trim().toLowerCase()) {
       case 'all':
         return setProductsToShow(products);
       case 'name':
@@ -149,7 +157,10 @@ const ManageProducts = () => {
         const filteredProductsByPrice2 = products.filter(product => (!isNaN(parseInt(searchQuery)) && (product.price >= searchQuery)));
         return setProductsToShow(filteredProductsByPrice2);
       case 'category':
-        const filteredProducts = products.filter(product => product.category.includes(searchQuery));
+        const filteredProducts = products.filter(product =>
+          product.category
+            ? product.category.toLowerCase().includes(searchQuery.toLowerCase())
+            : 'none'.includes(searchQuery.toLowerCase()));
         return setProductsToShow(filteredProducts);
       default:
         return setProductsToShow(products);
@@ -194,12 +205,14 @@ const ManageProducts = () => {
       if (responseData.body.success) {
         dispatch(setAlert({ message: responseData.body.message, severity: 'success', open: true }));
         getProducts();
+        setAddProductModal(null);
         return;
       }
       dispatch(setAlert({ message: responseData.body.message, severity: 'warning', open: true }));
     } catch (error) {
       dispatch(setAlert({ message: error.message, severity: 'error', open: true }));
       dispatch(setDisabledLoading(false));
+      setAddProductModal(null);
       console.log(error);
     }
   }
@@ -221,7 +234,7 @@ const ManageProducts = () => {
           filterOption,
         }} />
       </Box>
-      <Box sx={{ mt: '40px', mr: '40px' }} >
+      <Box sx={{ mt: '40px' }} >
         {notFound && <NotFound />}
         <ProductsView products={productsToShow} getProducts={getProducts} openModal={handleOpen} />
       </Box>
@@ -232,29 +245,29 @@ const ManageProducts = () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box>
-          <Box sx={{
-              position: 'absolute',
-              top: '10%',
-              left: '50%',
-              rounded: 'lg',
-              transform: 'translate(-50%, 0%)',
-              width: 400,
-              bgcolor: 'background.paper',
-              boxShadow: 24,
-              p: 2,
-              borderRadius: '10px',
-              maxHeight: "80vh",
-              overflowY: 'auto',
-              '&::-webkit-scrollbar': {
-                width: '0.4em'
-              },
-              '&::-webkit-scrollbar-track': {
-                backgroundColor: 'transparent'
-              },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: 'primary.main'
-              }
+        <Fade in={openModal !== null}>
+          <Box id="add-product-form" sx={{
+            position: 'absolute',
+            top: '10%',
+            left: '50%',
+            rounded: 'lg',
+            transform: 'translate(-50%, 0%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: '10px',
+            maxHeight: "80vh",
+            overflowY: 'auto',
+            '&::-webkit-scrollbar': {
+              width: '0.4em'
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: 'transparent'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: 'primary.main'
+            }
           }}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Edit Product
@@ -312,7 +325,36 @@ const ManageProducts = () => {
               value={editedProduct.description || ''}
               onChange={handlUpdateProductInputChange}
               margin="normal"
+              sx={{
+                'textarea::-webkit-scrollbar': {
+                  width: '0em !important',
+                },
+                'textarea:focus::-webkit-scrollbar': {
+                  width: '0.2em !important',
+                },
+                'textarea::-webkit-scrollbar-track': {
+                  backgroundColor: 'transparent !important',
+                },
+                'textarea::-webkit-scrollbar-thumb': {
+                  backgroundColor: '#673ab7 !important', // Use theme variables if available
+                },
+              }}
             />
+
+
+            <Box my={3}>
+              <Button size='small' variant={editedProduct.isFeatured ? 'contained' : 'text'} sx={{ mr: 2 }}
+                startIcon={editedProduct.isFeatured && <CheckIcon />}
+                onClick={() => setEditedProduct({ ...editedProduct, isFeatured: !editedProduct.isFeatured })}>
+                Featured
+              </Button>
+              <Button size='small' variant={editedProduct.isOnSale ? 'contained' : 'text'} sx={{ mr: 2 }}
+                startIcon={editedProduct.isOnSale && <CheckIcon />}
+                onClick={() => setEditedProduct({ ...editedProduct, isOnSale: !editedProduct.isOnSale })}>
+                On Sale
+              </Button>
+            </Box>
+
             <Button variant="contained"
               startIcon={updateLoading ? <CircularProgress color="inherit" sx={{
                 transform: 'scale(0.5)',
@@ -321,7 +363,7 @@ const ManageProducts = () => {
             </Button>
           </Box>
 
-        </Box>
+        </Fade>
       </Modal>
 
       <Modal

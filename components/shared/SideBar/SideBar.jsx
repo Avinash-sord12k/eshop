@@ -33,7 +33,8 @@ const SideBar = ({ navLinks }) => {
     const data = await response.json();
     if (data.body.success) {
       dispatch(setLogout());
-      router.push('/');
+      // router.push('/');
+      window.location.href = '/';
     }
   };
 

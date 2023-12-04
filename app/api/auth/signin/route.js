@@ -5,19 +5,26 @@ import Roles from "@/models/Roles";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
 
+function validateCredentials(email, password) {
+  if (!email || !password) {
+    return {
+      status: 400,
+      body: {
+        message: "Email and password are required",
+        success: false,
+      },
+    };
+  }
+}
+
 export const POST = async (req) => {
   try {
     await connect();
     const { email, password } = await req.json();
-    if (!email || !password) {
-      return NextResponse.json({
-        status: 400,
-        body: {
-          message: "Email and password are required",
-          success: false,
-        },
-      });
-    }
+
+    const validationError = validateCredentials(email, password);
+    if (validationError) return NextResponse.json(validationError);
+
     const user = await Users.findOne({ email });
     if (!user) {
       return NextResponse.json({

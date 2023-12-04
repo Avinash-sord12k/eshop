@@ -140,3 +140,52 @@ export const PUT = async (request) => {
     });
   }
 }
+
+export const GET = async (request) => {
+  try {
+    // Extract page from the query parameters
+    const page = parseInt(request.nextUrl.searchParams.get('page')) || 1;
+
+    // Connect to the database
+    await connect();
+
+    // Define the number of items per page and calculate the skip value
+    const perPage = 4;
+    const skip = (page - 1) * perPage;
+
+    // Fetch products with pagination and select specific fields
+    const products = await Products.find()
+      .select('_id name price category image')
+      .limit(perPage)
+      .skip(skip)
+      .lean();
+
+    // Map product _id to productId
+    const formattedProducts = products.map((product) => ({
+      ...product,
+      productId: product._id.toString(),
+    }));
+
+    // Return a success response with the fetched data
+    return NextResponse.json({
+      status: 200,
+      body: {
+        message: 'Products fetched successfully',
+        success: true,
+        data: formattedProducts,
+      },
+    });
+  } catch (error) {
+    // Handle errors gracefully and return an error response
+    console.error("Error in getting products: ", error.message);
+    return NextResponse.json({
+      status: 500,
+      body: { message: 'Internal server error', success: false },
+    });
+  }
+};
+
+
+
+
+

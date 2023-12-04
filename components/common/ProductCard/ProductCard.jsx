@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Rating from '@mui/material/Rating';
 import CardOptions from './CardOptions';
-import { Chip, Divider } from '@mui/material';
+import { Chip, Divider, Skeleton } from '@mui/material';
 
 
 export default function ProductCard({ product }) {
@@ -67,4 +67,33 @@ export default function ProductCard({ product }) {
       <CardOptions cardData={product} />
     </Card>
   );
+}
+
+
+export const CardSkeletonLoading = () => {
+  return (
+    <Card sx={{
+      borderRadius: 'small',
+      boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+    }}>
+      <CardMedia height={194}>
+        <Skeleton variant="rectangular" height={194} animation="wave" />
+      </CardMedia>
+      <Divider />
+      <CardContent sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        alignItems: 'flex-start',
+      }}>
+        <Skeleton variant="text" width={200} animation="wave" />
+        <Skeleton variant="text" width={100} animation="wave" />
+        <Skeleton variant="text" width={150} animation="wave" />
+        <Skeleton variant="text" width={100} animation="wave" />
+        <Skeleton variant="text" width={100} animation="wave" />
+      </CardContent>
+      <Divider />
+      {/* <CardOptions cardData={{}} /> */}
+    </Card>
+  )
 }
