@@ -1,34 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# E-Shopping Web Application
 
-## Getting Started
+The e-shopping web application is a versatile platform that serves multiple user roles: buyers and shopkeepers. Built on Next.js and Material UI, it provides an intuitive interface for efficient online transactions.
 
-First, run the development server:
+## Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+### User Roles
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Buyers:** Explore products, add to cart, make purchases, and manage account details.
+- **Shopkeepers:** Manage inventory, add/update/remove products, track sales, and manage orders.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Product Management
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Shopkeeper Dashboards:** Add new products with details like images, descriptions, prices, and inventory. Edit existing product information and manage stock availability.
 
-## Learn More
+### User-friendly Interface
 
-To learn more about Next.js, take a look at the following resources:
+- Utilizes Material UI for a seamless, visually appealing experience.
+- Ensures ease of navigation, responsiveness across devices, and a modern look and feel.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Cart and Checkout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Buyers can add products to their cart, review selections, and proceed to a secure checkout with various payment options.
 
-## Deploy on Vercel
+### Authentication and Authorization
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Robust mechanisms for secure access and personalized experiences based on roles and permissions.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Technology Stack
+
+- **Next.js:** Leverages server-side rendering for better performance and SEO optimization.
+- **Material UI:** Offers a wide array of pre-built components for a polished UI/UX.
+- **Database:** Likely uses MongoDB, MySQL, or Firebase for storing product information, user data, and transactions.
+
+## Screenshots
+
+### Login Page
+![Login Page](Screenshots/LoginPage.png)
+
+### Home Page
+![Home Page](Screenshots/HomePage.png)
+
+### Register Page
+![Register Page](Screenshots/RegisterPage.png)
+
+### Manage Products Page
+![Manage Products Page](Screenshots/ProductManagement.png)
+
+## Running Locally
+
+To run the project on your machine:
+
+1. Clone the repository.
+2. Run `npm install` to install dependencies.
+3. Execute `npm run dev` to start the development server.
+4. Visit `localhost:3000` in your browser to view the application.
