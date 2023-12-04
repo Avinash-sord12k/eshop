@@ -19,7 +19,7 @@
     "eslint-config-next": "13.4.19",
     "jose": "^4.14.4",
     "mongoose": "^7.4.3",
-    "next": "13.4.19",
+    "next": "13.5",
     "nodemailer": "^6.9.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
