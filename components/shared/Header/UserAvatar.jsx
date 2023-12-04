@@ -50,73 +50,82 @@ const UserAvatar = ({ props }) => {
 
   return (
     <Box>
-      {isAuth ? 
-      <>
-        <Tooltip title="Open settings">
-          <Badge color={'secondary'}
-            badgeContent={stringAvatar(role).children}
+      {isAuth ?
+        <>
+          <Tooltip title="Open settings">
+            <Badge color={'secondary'}
+              badgeContent={stringAvatar(role).children}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                {
+                  image
+                    ? <Avatar alt="user image" src={image} />
+                    : <Avatar {...stringAvatar(username)} />
+                }
+              </IconButton>
+            </Badge>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}>
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              {
-                image
-                  ? <Avatar alt="user image" src={image} />
-                  : <Avatar {...stringAvatar(username)} />
-              }
-            </IconButton>
-          </Badge>
-        </Tooltip>
-        <Menu
-          sx={{ mt: '45px' }}
-          id="menu-appbar"
-          anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={Boolean(anchorElUser)}
-          onClose={handleCloseUserMenu}
-        >
-          {settings.map((setting) => (
-            <Link href={setting.href} key={setting.title} style={{
-              textDecoration: 'none',
-              color: 'inherit',
-            }}>
-              <MenuItem >
-                <Typography textAlign="center">{setting.title}</Typography>
-              </MenuItem>
-            </Link>
-          ))}
-          <LogoutBtn />
-        </Menu>
-      </>
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <Link href={setting.href} key={setting.title} style={{
+                textDecoration: 'none',
+                color: 'inherit',
+              }}>
+                <MenuItem >
+                  <Typography textAlign="center">{setting.title}</Typography>
+                </MenuItem>
+              </Link>
+            ))}
+            <LogoutBtn />
+          </Menu>
+        </>
         : <Box sx={{
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
+          '& > *': {
+            color: 'white',
+          },
         }}>
-          <Button
+          <Link
             href="/auth/signin"
-            color="inherit"
-            sx={{ display: 'block' }}
           >
-            Login
-          </Button>
-          <Button
+            <Button
+              variant="contained"
+              disableElevation
+              >
+              Login
+            </Button>
+          </Link>
+          <Link
             href="/auth/signup"
-            color="inherit"
-            sx={{ display: 'block' }}
-          >
-            Register
-          </Button>
+            >
+            <Button
+              variant="contained"
+              disableElevation
+            >
+              Register
+            </Button>
+          </Link>
         </Box>}
     </Box>
   )

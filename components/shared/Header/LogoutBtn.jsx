@@ -21,7 +21,7 @@ const LogoutBtn = () => {
     if (data.body.success) {
       dispatch(setLogout());  
       // router.push('/auth/signin');
-      window.location.href = '/';
+      window.location.href = '/products';
     }
   };
 
