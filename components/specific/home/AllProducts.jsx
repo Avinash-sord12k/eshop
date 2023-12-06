@@ -15,10 +15,10 @@ const AllProducts = async () => {
     .lean();
 
   let featuredProducts = await Products.find({ isFeatured: true })
-    .select('_id name price description category image').lean();
+    .select('_id name price description category image rating').lean();
 
   let onSaleProducts = await Products.find({ isOnSale: true })
-    .select('_id name price description category image').lean();
+    .select('_id name price description category image rating').lean();
 
   basicProducts = basicProducts.map(item => { item._id = item._id.toString(); return item; });
   featuredProducts = featuredProducts.map(item => { item._id = item._id.toString(); return item; });

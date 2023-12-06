@@ -16,7 +16,7 @@ const ProductPage = async ({ params, searchParams: { writereview } }) => {
 
   await connect();
   const product = await Products.findById(params.id)
-    .select('_id name price description category image shopperId')
+    .select('_id name price description category rating image shopperId')
     .lean();
 
   const reviews = await Reviews.find({ productId: params.id })
@@ -46,7 +46,7 @@ const ProductPage = async ({ params, searchParams: { writereview } }) => {
             <Typography variant="h5" sx={{ fontWeight: '600' }}>
               {product.name[0].toUpperCase() + product.name.slice(1)}
             </Typography>
-            <Rating name="read-only" value={4} readOnly />
+            <Rating name="read-only" value={product?.rating ?? 0} readOnly />
             <Typography variant="h4" color="primary" sx={{ mt: 1 }}>
               ₹{product.price}
             </Typography>

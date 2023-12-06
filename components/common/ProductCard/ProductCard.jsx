@@ -9,9 +9,10 @@ import { Chip, Divider, Skeleton } from '@mui/material';
 
 
 export default function ProductCard({ product }) {
-  let { _id, name, price, descirption, category, image } = product;
+  let { _id, name, price, descirption, category, image, rating } = product;
+  // console.log({ product });
   _id = _id.toString();
-  product = { _id, name, price, descirption, category, image };
+  product = { _id, name, price, descirption, category, image, rating };
 
   function internationalNumberSystem(string) {
     string = string.toString().split('.');
@@ -55,13 +56,13 @@ export default function ProductCard({ product }) {
           <span style={{ marginRight: '6px' }}>₹</span>
           {internationalNumberSystem(price)}
         </Typography>
-        <Rating
-          name="product-rating"
-          value={4.5}
-          precision={0.5}
-          size='small'
-          readOnly
-        />
+          <Rating
+            name="product-rating"
+            value={rating ?? 0}
+            precision={0.5}
+            size='small'
+            readOnly
+          />
       </CardContent>
       <Divider></Divider>
       <CardOptions cardData={product} />
