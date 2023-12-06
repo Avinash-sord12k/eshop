@@ -5,6 +5,9 @@ import Products from '@/models/Products';
 import ProductOptions from '@/components/specific/shop/ProductPage/ProductOptions';
 import SameCategoryProducts from '@/components/specific/shop/ProductPage/SameCategoryProducts';
 import SellerInfo from '@/components/specific/shop/ProductPage/SellerInfo';
+import ReviewForm from '@/components/shared/Review/Form';
+import Reviews from '@/models/Reviews';
+import ReviewCard from '@/components/shared/Review/Card';
 
 
 const ProductPage = async ({ params }) => {
@@ -13,6 +16,12 @@ const ProductPage = async ({ params }) => {
   const product = await Products.findById(params.id)
     .select('_id name price description category image shopperId')
     .lean();
+
+  const reviews = await Reviews.find({ productId: params.id })
+    .populate('userId', 'username id')
+    .lean();
+
+  console.log("reviews: ", reviews);
 
   const { category } = product;
   product._id = product._id.toString();
@@ -64,6 +73,45 @@ const ProductPage = async ({ params }) => {
       {category ? <React.Suspense fallback={<CircularProgress />}>
         <SameCategoryProducts category={category} />
       </React.Suspense> : null}
+      <section>
+        <Box mt={10}>
+          <Typography variant="h4" sx={{ fontWeight: '600', mt: 4 }}>
+            Reviews
+          </Typography>
+          <Box sx={{
+            py: 5,
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'stretch',
+            justifyContent: 'start',
+            borderRadius: '4px',
+            border: '1px solid #e8e8e8',
+          }}>
+            {
+              reviews && reviews.length > 0
+                ? reviews.map((review) => (
+                  <ReviewCard
+                    key={review._id}
+                    review={{
+                      id: review._id,
+                      title: review.title,
+                      userId: review.userId._id,
+                      name: review.userId.username,
+                      rating: review.rating,
+                      review: review.comment,
+                    }}
+                  />
+                )) : <Typography variant="h5" color="textSecondary">
+                  No reviews yet.
+                </Typography>
+            }
+          </Box>
+        </Box>
+      </section>
+      <section>
+        <ReviewForm
+          productId={params.id} />
+      </section>
     </Container>
   );
 };
