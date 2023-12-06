@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid, Typography, Rating, Container, CircularProgress } from '@mui/material';
+import { Box, Grid, Typography, Rating, Container, CircularProgress, IconButton, Stack } from '@mui/material';
 import { connect } from '@/database/connect';
 import Products from '@/models/Products';
 import ProductOptions from '@/components/specific/shop/ProductPage/ProductOptions';
@@ -8,9 +8,11 @@ import SellerInfo from '@/components/specific/shop/ProductPage/SellerInfo';
 import ReviewForm from '@/components/shared/Review/Form';
 import Reviews from '@/models/Reviews';
 import ReviewCard from '@/components/shared/Review/Card';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import Link from 'next/link';
 
 
-const ProductPage = async ({ params }) => {
+const ProductPage = async ({ params, searchParams: { writereview } }) => {
 
   await connect();
   const product = await Products.findById(params.id)
@@ -18,6 +20,8 @@ const ProductPage = async ({ params }) => {
     .lean();
 
   const reviews = await Reviews.find({ productId: params.id })
+    .sort({ rating: -1 })
+    .limit(3)
     .populate('userId', 'username id')
     .lean();
 
@@ -74,18 +78,36 @@ const ProductPage = async ({ params }) => {
         <SameCategoryProducts category={category} />
       </React.Suspense> : null}
       <section>
-        <Box mt={10}>
-          <Typography variant="h4" sx={{ fontWeight: '600', mt: 4 }}>
-            Reviews
-          </Typography>
+        <Box mt={10} sx={{
+          border: '1px solid #e8e8e8',
+        }}>
+          <Stack
+            direction={'row'}
+            gap={'3'}
+            alignItems={'center'}
+            justifyContent={'center'}
+          >
+            <p style={{
+              fontSize: '1.5rem',
+              fontWeight: '600',
+              mt: 4
+            }}>
+              Reviews
+            </p>
+            <Link href={`?writereview=${params.id}`}>
+              <IconButton aria-label="write a review" sx={{ ml: 2 }}>
+                <ModeEditOutlineOutlinedIcon />
+              </IconButton>
+            </Link>
+          </Stack>
           <Box sx={{
             py: 5,
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'stretch',
-            justifyContent: 'start',
+            justifyContent: 'center',
             borderRadius: '4px',
-            border: '1px solid #e8e8e8',
+            gap: '1rem',
           }}>
             {
               reviews && reviews.length > 0
@@ -108,10 +130,7 @@ const ProductPage = async ({ params }) => {
           </Box>
         </Box>
       </section>
-      <section>
-        <ReviewForm
-          productId={params.id} />
-      </section>
+      {writereview && <ReviewForm productId={params.id} />}
     </Container>
   );
 };

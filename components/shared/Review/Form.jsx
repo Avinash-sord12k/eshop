@@ -1,16 +1,19 @@
 "use client";
 import React, { useState } from 'react';
-import { Box, TextField, Rating, Button, Typography, Collapse } from '@mui/material';
+import { Box, TextField, Rating, Button, Typography, Collapse, Modal } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAlert } from '@/store/uiStateSlice/uiStateSlice';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-const ReviewForm = ({ productId }) => {
-  const [expanded, setExpanded] = useState(false);
+const ReviewForm = () => {
 
   const email = useSelector(state => state.auth.email);
   const dispatch = useDispatch();
-  console.log({ email, productId });
+  const params = useSearchParams();
+  const productId = params.get('writereview');
+  const router = useRouter();
+
   if (!email) return null;
 
   const handleSubmit = async (e) => {
@@ -49,6 +52,11 @@ const ReviewForm = ({ productId }) => {
     let result;
     try {
       result = await res.json();
+      dispatch(setAlert({
+        open: true,
+        severity: 'success',
+        message: 'Review submitted successfully',
+      }))
     } catch (error) {
       dispatch(setAlert({
         open: true,
@@ -56,34 +64,44 @@ const ReviewForm = ({ productId }) => {
         message: error.message ?? 'Something went wrong',
       }))
     } finally {
-      setExpanded(false);
+      if (result) {
+        router.back()
+      }
     }
   };
 
   return (
-    <Box sx={{
-      maxWidth: 400,
-      margin: 'auto',
-      padding: 2,
-      '& form': {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'start',
-      },
-    }}>
-      <Typography variant="h5" sx={{ fontWeight: '600', mt: 6 }}>
-        Write a Review
-      </Typography>
-      <Button
-        onClick={() => setExpanded(!expanded)}
-        endIcon={<ExpandMore />}
-        sx={{ mt: 2 }}
-      >
-        {expanded ? 'Hide Form' : 'Show Form'}
-      </Button>
-      <Collapse in={expanded}>
+    <Modal
+      open={productId}
+      onClose={() => router.back()}
+    >
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        borderRadius: 4,
+        p: 4,
+        maxWidth: 400,
+        margin: 'auto',
+        '& form': {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'start',
+        },
+      }}>
+        <Typography variant="h5" sx={{ fontWeight: '600', mt: 6 }}>
+          Write a Review
+        </Typography>
+        <Typography variant="subtitle1" sx={{ mb: 4 }}>
+          Product: {productId}
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <Rating name="rating" defaultValue={0} precision={0.5} />
+          <Rating name="rating" size='medium' defaultValue={0} precision={1} />
           <TextField
             label="Review Title"
             variant="outlined"
@@ -109,8 +127,8 @@ const ReviewForm = ({ productId }) => {
             Submit
           </Button>
         </form>
-      </Collapse>
-    </Box>
+      </Box>
+    </Modal >
   );
 };
 

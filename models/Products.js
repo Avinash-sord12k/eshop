@@ -5,6 +5,11 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  rating: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
   price: {
     type: Number,
     required: true,
